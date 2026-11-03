@@ -26,9 +26,25 @@ value_units <- panel_line |>
     caption = "Value vs. Unit Chart"
   )
 
+value_units #calling table
 ggsave(here("output/figures", "value_vs_units.png"), value_units, width = 8, height = 5, dpi = 300)
 
 
 
 teir_composition <- panel_line |> 
+  group_by(year = year(month), tier) |>
+  summarize(
+    exports_chf = sum(exports_chf),
+    units = sum(units)
+  ) |> 
+  filter(year <= 2025) |>
+  ggplot(aes(x = year, y = exports_chf, fill = tier)) +
+  geom_area(position = "fill") +
+  labs(x = "Year", 
+       y = "Share of export value (%)",
+       title = "Composition of Exports by Tier"
+       )
+
+teir_composition #calling table
+ggsave(here("output/figures", "tier_composition.png"), teir_composition, width = 8, height = 5, dpi = 300)
   
