@@ -2,6 +2,7 @@ library(tidyverse)
 library(here)
 
 
+#Importing data
 panel_line <- read_csv(here("data/clean/merged_data/panel_line.csv"), na = "")
 fh_tiers <- read_csv(here("data/clean/clean_fh_price_tiers.csv"), na = "")
 polarization <- read_csv(here("data/clean/merged_data/polarization_monthly.csv"), na = "")
@@ -147,5 +148,9 @@ growth_table <- panel_line |>
   select(tier, period, value_growth, units_growth)
 
 
-growth_table
+growth_table 
 write_csv(growth_table, here("output/tables", "growth_by_tier.csv"))
+
+
+
+
