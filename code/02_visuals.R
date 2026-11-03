@@ -30,7 +30,7 @@ value_units #calling table
 ggsave(here("output/figures", "value_vs_units.png"), value_units, width = 8, height = 5, dpi = 300)
 
 
-
+# Tier composition chart (share of export value (%))
 teir_composition <- panel_line |> 
   group_by(year = year(month), tier) |>
   summarize(
@@ -48,3 +48,19 @@ teir_composition <- panel_line |>
 teir_composition #calling table
 ggsave(here("output/figures", "tier_composition.png"), teir_composition, width = 8, height = 5, dpi = 300)
   
+
+#Unit value ridge line chart
+unitvalue_ridgeline <- panel_line |> 
+  mutate(year = year(month)) |> 
+  mutate(log_uv = log(unit_value)) |> 
+  ggplot(aes(x = log_uv, y = factor(year))) +
+  ggridges::geom_density_ridges(stat = "density", aes(weight = units, height = after_stat(density))) + 
+  labs(
+    x = "Log(Unit Value)",
+    y = "Year",
+    title = "Distribution of Log(Unit Value) by Year"
+  )
+
+
+unitvalue_ridgeline #calling table
+
