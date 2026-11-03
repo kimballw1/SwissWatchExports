@@ -24,7 +24,7 @@ value_units <- panel_line |>
   geom_line() +
   labs(
     x = "Year",
-    y = "Index (2000 = 100)",
+    y = "Level relative to year 2000 (2000 = 100)",
     caption = "Value vs. Unit Chart"
   )
 
@@ -127,6 +127,8 @@ polarization_plot <- polarization |>
 polarization_plot
 ggsave(here("output/figures", "polarization_index.png"), polarization_plot, width = 8, height = 5, dpi = 300)
 
+
+
 # Growth rates by tier and period
 growth_table <- panel_line |>
   group_by(year = year(month), tier) |>
@@ -143,6 +145,7 @@ growth_table <- panel_line |>
   ) |>
   filter(year != 2012) |>
   select(tier, period, value_growth, units_growth)
+
 
 growth_table
 write_csv(growth_table, here("output/tables", "growth_by_tier.csv"))
