@@ -4,7 +4,7 @@ Nov 1, 2026 · Kimball Weeks
 
 ## Overview
 
-The Swiss watch industry ships far fewer watches than it did 15 years ago and earns more doing it. The paper documents that shift, explains it with regressions, and forecasts where it goes next. Working title: *Fewer, Pricier, Richer: The Swiss Watch Market Goes Upmarket.*
+The Swiss watch industry ships far fewer watches than it did 15 years ago and earns more doing it. The paper documents that shift, explains it with regressions, and forecasts where it goes next. Working title: *Understanding the Swiss Watch Market*
 
 The paper runs in three acts: what happened, why, and what comes next.
 
@@ -17,26 +17,7 @@ The paper runs in three acts: what happened, why, and what comes next.
 | Why | RQ5. Do gold prices pass through to precious-metal watch prices? | Distributed-lag pass-through regression |
 | What next | RQ6. Can we forecast exports by tier and destination, and do wealth signals help the top tier most? | Forecast comparison, counterfactuals, scenarios |
 
-Dropped: the luxury-stock event study and nowcasting top wealth. Equity indices stay, but only as predictors and controls, not as an outcome.
-
 Main hypothesis tying it together: the top tier is driven by wealth and gold, the bottom tier was hit by smartwatches, and the middle got squeezed from both sides.
-
-## Data
-
-Most of the data is already cleaned. Three small pulls are new, and one decision (pre-2012 data) affects how strong the smartwatch section can be.
-
-| File | Source | Frequency | Status | Used in |
-| --- | --- | --- | --- | --- |
-| Exports by 8-digit tariff line × country (value CHF, pieces) | Swiss-Impex | Monthly, 2012+ | Have | Everything |
-| Exports by FH price tier × country | FH statistics | Monthly | Have (PDF to CSV) | Descriptives, wealth panel, forecasting |
-| Top 1% income share, top 1% wealth share | WID | Annual, 22 countries | Have | Wealth panel |
-| GDP (constant USD) | World Bank WDI | Annual | Have | Wealth panel |
-| Equity indices | FRED / OECD SPASTT01 | Monthly, 15 countries | Have | Wealth panel, forecasting |
-| Exchange rates vs CHF | FRED | Monthly | Have | Controls everywhere |
-| Gold price (USD/oz) | World Bank Pink Sheet | Monthly | New | Gold pass-through, forecasting |
-| Swiss CPI | FRED (OECD CPI for CH) | Monthly | New | Real price index |
-| Pre-2012 tariff-line exports | opendata.swiss bulk CSV (filter to 9101/9102) | Monthly, 2000 to 2011 | New, high priority | Smartwatch counterfactual, long-run charts |
-| Google Trends "Rolex" by country | Google Trends | Monthly, 2004+ | Optional | Forecasting predictor |
 
 **Tier definitions from tariff lines.** HS 9101 is precious-metal cases, 9102 is everything else (mostly steel). Within each, subheadings .11/.12/.19 are electric (quartz) and .21/.29 are mechanical (automatic, manual). That gives a fixed 2 × 2 that, unlike FH price tiers, doesn't shift when prices change:
 
@@ -47,7 +28,7 @@ Most of the data is already cleaned. Three small pulls are new, and one decision
 
 Unit value = export value / pieces, per line × country × month. Use FH price tiers for the headline story and forecasting, and tariff-line groups for regressions, where a fixed definition matters.
 
-**Shock dates to code as dummies:** Dec 2012 (China anti-graft rules), Jan 15 2015 (franc unpegging), Apr 24 2015 (Apple Watch launch), mid 2019 (Hong Kong protests), Mar 2020 to mid 2021 (COVID), 2025 (US tariff front-loading and drop).
+**Shock dates as dummies:** Dec 2012 (China anti-graft rules), Jan 15 2015 (franc unpegging), Apr 24 2015 (Apple Watch launch), mid 2019 (Hong Kong protests), Mar 2020 to mid 2021 (COVID), 2025 (US tariff front-loading and drop).
 
 ## Module 1: Descriptives and destination shifts (RQ2)
 
