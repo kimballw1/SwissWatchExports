@@ -73,3 +73,25 @@ write_csv(decomp, here("output/tables", "decomposition_annual.csv"))
 # value_change = volume_effect + price_effect + mix_effectth
 decomp
 
+
+#plotting the decomposition of value change into volume, price, and mix effects
+decomp_chart <- decomp |> 
+  pivot_longer(c(volume_effect, price_effect, mix_effect), names_to = "part", values_to = "change") |>
+  mutate(part = factor(part, levels = c("volume_effect", "price_effect", "mix_effect"), labels = c("Volume", "Price", "Mix"))) |>
+  ggplot(aes(x = year, y = change)) +
+  geom_col(aes(fill = part)) +
+  geom_point(aes(y = value_change), size = 2) +
+  geom_hline(yintercept = 0) +
+  labs(
+    x = "Year",
+    y = "Log change from previous year",
+    fill = NULL,
+    title = "What Drove the Change in Swiss Watch Export Value",
+    caption = "Bars: volume, price and mix. Dots: total change in export value."
+  )
+
+decomp_chart
+ggsave(here("output/figures", "decomposition_by_year.png"), decomp_chart, width = 8, height = 5, dpi = 300)
+
+
+
