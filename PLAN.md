@@ -114,6 +114,8 @@ $$
 
 ## Module 4: Forecasting (RQ6)
 
+**Dropped 2026-11-07.** No forecasting in the paper. RQ6, F12 to F15, T5, the counterfactuals, scenarios and the forecast sandbox visuals go with it. The text below is kept for reference only.
+
 The main forecasting test: wealth and gold predictors should improve forecasts for the 3,000+ tier but not for the under-200 tier. If they do, the forecasts back up the regressions.
 
 ### Targets
@@ -238,23 +240,18 @@ Keep the forecasting loop separate from evaluation. The loop is slow, so run it 
 The plan fits five weeks, assuming the paper is due finals week (about Dec 7). Shift the weeks if the deadline is different.
 
 **Week of Nov 2: data and descriptives**
-- [ ] Pull gold (World Bank Pink Sheet) and Swiss CPI
-- [ ] Filter the opendata.swiss bulk file to 9101/9102 for 2000 to 2011
-- [ ] Build annual_panel, monthly_panel, line_panel
-- [ ] F1 to F5, T1, and sandbox drafts of the extra visuals. Check the story holds before going further.
+- [x] Pull gold (World Bank Pink Sheet) and Swiss CPI
+- [x] Filter the opendata.swiss bulk file to 9101/9102 for 2000 to 2011
+- [x] Build annual_panel, monthly_panel, line_panel
+- [x] F1 to F5, T1, and sandbox drafts of the extra visuals. Check the story holds before going further.
 
 **Week of Nov 9: decomposition and wealth regressions**
 - [ ] Decomposition, F6 and F7
 - [ ] 3a annual and monthly, T2, F8, F9
 
 **Week of Nov 16: smartwatch and gold**
-- [ ] 3b diff-in-diff and event study, T3, F10
-- [ ] 3c gold pass-through, T4, F11
-
-**Week of Nov 23 (Thanksgiving): forecasting**
-- [ ] Expanding-window loop for naive, ETS, SARIMA, ARIMAX, decomposed
-- [ ] Reconciliation
-- [ ] Counterfactuals and 2025 holdout
+- [x] 3b diff-in-diff and event study, T3, F10
+- [x] 3c gold pass-through, T4, F11
 
 **Week of Nov 30: evaluation and writing**
 - [ ] F12 to F15, T5, scenarios, hedgehog and coverage plots
