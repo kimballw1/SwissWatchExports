@@ -63,6 +63,8 @@ decomp <- year_totals |>
   filter(year > 2000) |>
   select(year, value_change = dlog_value, volume_effect = dlog_units, price_effect = price, mix_effect = mix)
 
+write_csv(decomp, here("output/tables", "decomposition_annual.csv"))
+
 # All four are year-over-year log changes
 # value_change:  change in total export value
 # volume_effect: part from shipping more or fewer watches
