@@ -352,345 +352,203 @@ display: none;
 </div>
 
 
-<div id="codebook-for-dataclean" class="section level1">
-<h1>Codebook for data/clean</h1>
-<p>Everything here is made by <code>code/01_Clean.R</code> from the
-files in <code>data/raw</code>. Missing values are blank cells. Read
-with <code>read_csv(file, na = &quot;&quot;)</code>.</p>
-<div id="merged_datapanel_annual.csv" class="section level2">
-<h2>merged_data/panel_annual.csv</h2>
-<p>One row per country x tier x year. 22 countries, 4 tiers, 2000-2024 =
-2,200 rows.</p>
+<div id="codebook" class="section level1">
+<h1>Codebook</h1>
+<p>All files are made by <code>code/Clean.R</code>. Blank cell =
+missing. Read with <code>read_csv(file, na = &quot;&quot;)</code>.</p>
+<p><strong>Tiers:</strong> precious_mech, precious_quartz, steel_mech,
+steel_quartz (precious = gold/platinum case, steel = everything else).
+<strong>Samples:</strong> core 15 = HK US CN JP SG GB DE IT AE FR KR ES
+AU NL CA. Wide 22 = core 15 + AT BE PT GR SA QA BH.</p>
+<div id="analysis-panels-merged_data" class="section level2">
+<h2>Analysis panels (merged_data/)</h2>
+<div id="panel_annual.csv" class="section level3">
+<h3>panel_annual.csv</h3>
+<p>Country × tier × year. Wide 22, 2000-2024.</p>
 <table>
 <colgroup>
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
+<col width="50%" />
+<col width="50%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>Column</th>
 <th>Meaning</th>
-<th>Units</th>
-<th>Source</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>iso2</td>
-<td>Destination country</td>
-<td>2-letter code</td>
-<td>BAZG</td>
-</tr>
-<tr class="even">
-<td>tier</td>
-<td>precious_mech, precious_quartz, steel_mech, steel_quartz</td>
-<td></td>
-<td>tariff lines</td>
-</tr>
-<tr class="odd">
-<td>year</td>
-<td>Calendar year</td>
-<td></td>
-<td></td>
+<td>iso2, tier, year</td>
+<td>Keys</td>
 </tr>
 <tr class="even">
 <td>exports_chf</td>
-<td>Export value, summed over the year’s months</td>
-<td>CHF, nominal</td>
-<td>BAZG</td>
+<td>Export value (CHF)</td>
 </tr>
 <tr class="odd">
 <td>units</td>
 <td>Watches exported</td>
-<td>pieces</td>
-<td>BAZG</td>
 </tr>
 <tr class="even">
 <td>unit_value</td>
 <td>exports_chf / units</td>
-<td>CHF per watch</td>
-<td>computed</td>
 </tr>
 <tr class="odd">
 <td>top1_income</td>
-<td>Top 1% pre-tax income share (sptinc992j, p99p100)</td>
-<td>share, 0-1</td>
-<td>WID</td>
+<td>Top 1% income share (0-1)</td>
 </tr>
 <tr class="even">
 <td>top1_wealth</td>
-<td>Top 1% net wealth share (shweal992j, p99p100)</td>
-<td>share, 0-1</td>
-<td>WID</td>
+<td>Top 1% wealth share (0-1)</td>
 </tr>
 <tr class="odd">
 <td>gdp_const_usd</td>
-<td>GDP (NY.GDP.MKTP.KD)</td>
-<td>constant 2015 USD</td>
-<td>WDI</td>
+<td>GDP (constant USD)</td>
 </tr>
 <tr class="even">
 <td>gdp_pc_ppp</td>
-<td>GDP per capita (NY.GDP.PCAP.PP.KD)</td>
-<td>constant PPP dollars</td>
-<td>WDI</td>
+<td>GDP per capita (PPP)</td>
 </tr>
 <tr class="odd">
 <td>equity_index</td>
-<td>Annual average of the monthly stock index. Blank for AT, BE, BH, GR,
-PT, QA, SA (no index) and for AE in 2000-2013 (series starts May 2014;
-AE 2014 averages May-Dec)</td>
-<td>2015 = 100</td>
-<td>OECD via FRED; Yahoo for HK, SG, AE</td>
+<td>Stock index (2015 = 100). Blank for 7 countries without one</td>
 </tr>
 <tr class="even">
 <td>chf_per_lcu</td>
-<td>Annual average exchange rate</td>
 <td>CHF per unit of local currency</td>
-<td>FRED; pegs for AE, SA, QA, BH</td>
 </tr>
 <tr class="odd">
 <td>rer</td>
-<td>Real exchange rate: chf_per_lcu x destination CPI / Swiss CPI.
-Higher = destination currency stronger in real terms. Blank for AE
-2000-2006 (no CPI)</td>
-<td>index (CPIs 2010 = 100)</td>
-<td>FRED + WDI FP.CPI.TOTL</td>
+<td>Real exchange rate (higher = destination currency stronger)</td>
 </tr>
 <tr class="even">
-<td>quality_income</td>
-<td>WID data quality flag for the income share</td>
-<td>0 (imputed) to 5</td>
-<td>WID</td>
-</tr>
-<tr class="odd">
-<td>quality_wealth</td>
-<td>WID data quality flag for the wealth share</td>
-<td>0 (imputed) to 5</td>
-<td>WID</td>
+<td>quality_income, quality_wealth</td>
+<td>WID data quality (0 = imputed)</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="merged_datapanel_monthly.csv" class="section level2">
-<h2>merged_data/panel_monthly.csv</h2>
-<p>One row per country x tier x month. Core 15 countries, 4 tiers, Jan
-2000-Sep 2026 (321 months). 19,247 rows: 13 cells have no exports and no
-row (CA precious_quartz April 2020, and 12 China cells in
-2000-2002).</p>
+<div id="panel_monthly.csv" class="section level3">
+<h3>panel_monthly.csv</h3>
+<p>Country × tier × month. Core 15, Jan 2000-Sep 2026.</p>
 <table>
-<colgroup>
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
-</colgroup>
 <thead>
 <tr class="header">
 <th>Column</th>
 <th>Meaning</th>
-<th>Units</th>
-<th>Source</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>iso2</td>
-<td>Destination country</td>
-<td>2-letter code</td>
-<td>BAZG</td>
+<td>iso2, tier, month</td>
+<td>Keys</td>
 </tr>
 <tr class="even">
-<td>tier</td>
-<td>Watch tier</td>
-<td></td>
-<td></td>
+<td>exports_chf, units</td>
+<td>Export value (CHF), watches exported</td>
 </tr>
 <tr class="odd">
-<td>month</td>
-<td>First day of the month</td>
-<td>date</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>exports_chf</td>
-<td>Export value</td>
-<td>CHF, nominal</td>
-<td>BAZG</td>
-</tr>
-<tr class="odd">
-<td>units</td>
-<td>Watches exported</td>
-<td>pieces</td>
-<td>BAZG</td>
-</tr>
-<tr class="even">
 <td>equity_index</td>
-<td>Monthly stock index. Blank for AE before May 2014 and for the 12
-OECD countries in Sep 2026</td>
-<td>2015 = 100</td>
-<td>OECD via FRED; Yahoo for HK, SG, AE</td>
-</tr>
-<tr class="odd">
-<td>chf_per_lcu</td>
-<td>Monthly average exchange rate</td>
-<td>CHF per unit of local currency</td>
-<td>FRED; peg for AE</td>
+<td>Stock index (2015 = 100)</td>
 </tr>
 <tr class="even">
-<td>gold_chf</td>
-<td>Gold price</td>
-<td>CHF per troy ounce</td>
-<td>World Bank Pink Sheet x FRED EXSZUS</td>
+<td>chf_per_lcu</td>
+<td>CHF per unit of local currency</td>
 </tr>
 <tr class="odd">
+<td>gold_chf</td>
+<td>Gold price (CHF per ounce)</td>
+</tr>
+<tr class="even">
 <td>top1_income_2012</td>
-<td>The country’s top 1% income share in 2012, same in every row</td>
-<td>share, 0-1</td>
-<td>WID</td>
+<td>Country’s 2012 top 1% income share</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>anti_graft … us_tariff_39</td>
-<td>Seven 0/1 shock dummies, same in every country (see
-clean_shocks_monthly.csv)</td>
-<td>0/1</td>
-<td>hand-coded</td>
+<td>Shock dummies (0/1), see below</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="merged_datapanel_line.csv" class="section level2">
-<h2>merged_data/panel_line.csv</h2>
-<p>One row per country x tariff line x month. All 242 destinations, 10
-wristwatch lines (9101.12.00 only until 2006), Jan 2000-Sep 2026.
-230,432 rows, the same rows as clean_watch_exports_monthly.csv. The wide
-22 are 24% of rows and 85% of value.</p>
+<div id="panel_line.csv" class="section level3">
+<h3>panel_line.csv</h3>
+<p>Country × tariff line × month. All countries, Jan 2000-Sep 2026.</p>
 <table>
 <colgroup>
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
+<col width="50%" />
+<col width="50%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>Column</th>
 <th>Meaning</th>
-<th>Units</th>
-<th>Source</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>iso2</td>
-<td>Destination country</td>
-<td>2-letter code</td>
-<td>BAZG</td>
+<td>iso2, tariff_line, month</td>
+<td>Keys (tariff_line like “9101.21.00”)</td>
 </tr>
 <tr class="even">
-<td>tariff_line</td>
-<td>8-digit tariff line, e.g. “9101.21.00”</td>
-<td>text</td>
-<td>BAZG</td>
-</tr>
-<tr class="odd">
 <td>tier</td>
-<td>precious_mech, precious_quartz, steel_mech, steel_quartz</td>
-<td></td>
-<td>tariff lines</td>
-</tr>
-<tr class="even">
-<td>month</td>
-<td>First day of the month</td>
-<td>date</td>
-<td></td>
+<td>Tier of the tariff line</td>
 </tr>
 <tr class="odd">
-<td>units</td>
-<td>Watches exported</td>
-<td>pieces</td>
-<td>BAZG</td>
-</tr>
-<tr class="even">
-<td>exports_chf</td>
-<td>Export value</td>
-<td>CHF, nominal</td>
-<td>BAZG</td>
-</tr>
-<tr class="odd">
-<td>unit_value</td>
-<td>exports_chf / units</td>
-<td>CHF per watch</td>
-<td>computed</td>
+<td>units, exports_chf, unit_value</td>
+<td>Watches, export value (CHF), CHF per watch</td>
 </tr>
 <tr class="even">
 <td>chf_per_lcu</td>
-<td>Monthly exchange rate. Blank outside the wide 22</td>
-<td>CHF per unit of local currency</td>
-<td>FRED; pegs for AE, SA, QA, BH</td>
+<td>CHF per unit of local currency. Blank outside the wide 22</td>
 </tr>
 <tr class="odd">
 <td>gold_chf</td>
-<td>Gold price</td>
-<td>CHF per troy ounce</td>
-<td>World Bank Pink Sheet x FRED EXSZUS</td>
+<td>Gold price (CHF per ounce)</td>
 </tr>
 <tr class="even">
 <td>anti_graft … us_tariff_39</td>
-<td>Seven 0/1 shock dummies (see clean_shocks_monthly.csv)</td>
-<td>0/1</td>
-<td>hand-coded</td>
+<td>Shock dummies (0/1), see below</td>
 </tr>
 </tbody>
 </table>
-<p>Months with no shipments have no row. Used for the decomposition (all
-countries), 3b (9102 lines, wide 22) and 3c (all lines, wide 22).</p>
 </div>
-<div id="merged_datapolarization_monthly.csv" class="section level2">
-<h2>merged_data/polarization_monthly.csv</h2>
-<p>One row per month, Jan 2000-Sep 2026 (321 rows). All destinations and
-all 9 wristwatch lines.</p>
+<div id="polarization_monthly.csv" class="section level3">
+<h3>polarization_monthly.csv</h3>
+<p>One row per month.</p>
 <table>
 <colgroup>
-<col width="33%" />
-<col width="33%" />
-<col width="33%" />
+<col width="50%" />
+<col width="50%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>Column</th>
 <th>Meaning</th>
-<th>Units</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>month</td>
-<td>First day of the month</td>
-<td>date</td>
+<td>Month</td>
 </tr>
 <tr class="even">
 <td>exports_chf</td>
-<td>Total wristwatch export value</td>
-<td>CHF, nominal</td>
+<td>Total export value (CHF)</td>
 </tr>
 <tr class="odd">
 <td>exports_chf_over_3000</td>
-<td>Value from line x country cells with unit value over CHF 3,000</td>
-<td>CHF, nominal</td>
+<td>Value from cells with unit value over CHF 3,000</td>
 </tr>
 <tr class="even">
 <td>polarization</td>
-<td>exports_chf_over_3000 / exports_chf</td>
-<td>share, 0-1</td>
+<td>Share of value over CHF 3,000 (0-1)</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="intermediate-files" class="section level2">
-<h2>Intermediate files</h2>
+</div>
+<div id="source-files" class="section level2">
+<h2>Source files</h2>
 <table>
 <colgroup>
 <col width="33%" />
@@ -701,70 +559,102 @@ all 9 wristwatch lines.</p>
 <tr class="header">
 <th>File</th>
 <th>One row is</th>
-<th>Notes</th>
+<th>Columns</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>clean_watch_exports_monthly.csv</td>
-<td>country x tariff line x month, Jan 2000-Sep 2026</td>
-<td>All countries, pocket watches dropped, 230,432 rows. Columns iso2,
-month, tariff_line (“9101.21.00”), tier, units, exports_chf, unit_value.
-Months with no shipments have no row. 2026 is provisional</td>
+<td>country × tariff line × month</td>
+<td>iso2, month, tariff_line, tier, units, exports_chf, unit_value</td>
 </tr>
 <tr class="even">
 <td>clean_wid_top_shares.csv</td>
-<td>country x year, 2000-2024</td>
+<td>country × year</td>
 <td>iso2, year, top1_income, top1_wealth, quality_income,
 quality_wealth</td>
 </tr>
 <tr class="odd">
 <td>clean_wdi_gdp.csv</td>
-<td>country x year</td>
-<td>iso2, year, gdp_const_usd, gdp_pc_ppp. Aggregates dropped</td>
+<td>country × year</td>
+<td>iso2, year, gdp_const_usd, gdp_pc_ppp</td>
 </tr>
 <tr class="even">
 <td>clean_wdi_cpi.csv</td>
-<td>country x year, 2000-2025</td>
-<td>iso2, year, cpi (2010 = 100). Aggregates dropped</td>
+<td>country × year</td>
+<td>iso2, year, cpi (2010 = 100)</td>
 </tr>
 <tr class="odd">
 <td>clean_equity_monthly.csv</td>
-<td>country x month, 2000 to Sep 2026</td>
-<td>iso2, month, equity_index. 15 countries</td>
+<td>country × month</td>
+<td>iso2, month, equity_index</td>
 </tr>
 <tr class="even">
 <td>clean_fx_monthly.csv</td>
-<td>country x month, 2000 to Sep 2026</td>
-<td>iso2, month, currency, chf_per_lcu. 22 countries</td>
+<td>country × month</td>
+<td>iso2, month, currency, chf_per_lcu</td>
 </tr>
 <tr class="odd">
 <td>clean_gold_monthly.csv</td>
-<td>month, Jan 2000-Sep 2026</td>
-<td>month, gold_usd, gold_chf (per troy ounce)</td>
+<td>month</td>
+<td>month, gold_usd, gold_chf</td>
 </tr>
 <tr class="even">
 <td>clean_cpi_monthly.csv</td>
-<td>month, Jan 2000-Sep 2026</td>
-<td>month, cpi (Swiss CPI, December 2020 = 100)</td>
+<td>month</td>
+<td>month, cpi (Swiss, Dec 2020 = 100)</td>
 </tr>
 <tr class="odd">
 <td>clean_shocks_monthly.csv</td>
-<td>month, Jan 2000-Sep 2026</td>
-<td>0/1 columns: anti_graft (Dec 2012 on), chf_unpeg (Jan 2015 on),
-apple_watch (May 2015 on), hk_protests (Jun-Dec 2019), covid (Mar
-2020-Jun 2021), us_frontload (Apr 2025 and Jul 2025), us_tariff_39
-(Aug-Nov 2025). The last two are US events; interact with a US dummy
-where it matters</td>
+<td>month</td>
+<td>month + the 7 shock dummies</td>
 </tr>
 <tr class="even">
 <td>clean_fh_price_tiers.csv</td>
-<td>period x price band, world totals</td>
-<td>year, month (blank for annual rows), band (total, under_200,
-200_500, 500_3000, over_3000), units (pieces), exports_chf (CHF). Annual
-rows for 2000, 2005, 2010, 2015, 2020-2025; monthly rows Jan 2025-Aug
-2026. 150 rows. Rounded in the PDF to 1,000 units and CHF 0.1m.
-Descriptives only</td>
+<td>year (or month) × price band</td>
+<td>year, month, band, units, exports_chf (world totals, descriptives
+only)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="shock-dummies" class="section level2">
+<h2>Shock dummies</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Dummy</th>
+<th>Equals 1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>anti_graft</td>
+<td>Dec 2012 on</td>
+</tr>
+<tr class="even">
+<td>chf_unpeg</td>
+<td>Jan 2015 on</td>
+</tr>
+<tr class="odd">
+<td>apple_watch</td>
+<td>May 2015 on</td>
+</tr>
+<tr class="even">
+<td>hk_protests</td>
+<td>Jun-Dec 2019</td>
+</tr>
+<tr class="odd">
+<td>covid</td>
+<td>Mar 2020-Jun 2021</td>
+</tr>
+<tr class="even">
+<td>us_frontload</td>
+<td>Apr 2025, Jul 2025</td>
+</tr>
+<tr class="odd">
+<td>us_tariff_39</td>
+<td>Aug-Nov 2025</td>
 </tr>
 </tbody>
 </table>
