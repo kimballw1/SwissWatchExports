@@ -152,5 +152,3 @@ growth_table
 write_csv(growth_table, here("output/tables", "growth_by_tier.csv"))
 
 
-
-
