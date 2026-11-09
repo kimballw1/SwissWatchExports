@@ -1,3 +1,6 @@
+# Smartwatch diff-in-diff and event study: 
+# did steel quartz exports fall relative to steel mechanical after the Apple Watch?
+
 library(pacman)
 
 p_load(here, tidyverse, fixest, modelsummary)

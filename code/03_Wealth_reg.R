@@ -1,3 +1,5 @@
+# Annual wealth regression: do top 1% income shares and stock markets predict Swiss watch exports by tier?
+
 library(pacman)
 
 p_load(here, tidyverse, fixest, modelsummary, stargazer)

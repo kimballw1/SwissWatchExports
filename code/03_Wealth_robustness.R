@@ -1,3 +1,5 @@
+# Checks on the annual wealth regression: tier differences, dropping the hubs, and units vs unit value.
+
 library(pacman)
 
 p_load(here, tidyverse, fixest, modelsummary)

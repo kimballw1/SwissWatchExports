@@ -1,3 +1,5 @@
+# Gold pass-through: do gold price changes show up in precious-metal watch prices over the next 12 months?
+
 library(pacman)
 
 p_load(here, tidyverse, fixest, modelsummary)

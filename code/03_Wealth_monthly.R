@@ -1,3 +1,5 @@
+# Monthly wealth regression: do 12-month stock market gains predict 12-month export growth by tier, overall and in rolling 5-year windows?
+
 library(pacman)
 
 p_load(here, tidyverse, fixest, modelsummary, broom)
