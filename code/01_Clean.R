@@ -6,7 +6,6 @@ library(readxl)
 library(pdftools)
 library(here)
 
-
 # ---- Loading the data -----
 
 # country x tariff line x month exports; everything else gets joined onto this

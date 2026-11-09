@@ -98,9 +98,14 @@ ggsave(here("output/figures", "gold_passthrough.png"), gold_plot, width = 8, hei
 gold_table <- gold_cumulative |>
   filter(lag %in% c(0, 3, 6, 12)) |>
   transmute(
-    `Months after` = as.character(lag),
+    `Months after gold change` = as.character(lag),
     `Cumulative pass-through` = estimate,
     `Std. error` = se
   )
 
-datasummary_df(gold_table, fmt = 3)
+datasummary_df(
+  gold_table,
+  fmt = 3,
+  title = "Gold Price Pass-Through to Precious-Metal Watch Prices",
+  notes = "Extra % change in precious-metal watch unit values after a 1% gold price rise, relative to steel watches. Standard errors clustered by country."
+)

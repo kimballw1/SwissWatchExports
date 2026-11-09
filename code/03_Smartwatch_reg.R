@@ -52,30 +52,39 @@ smart_trends <- feols(
 )
 
 smart_models <- list(
-  "DiD" = smart_did,
-  "+ Quartz × FX" = smart_fx,
-  "+ Line trends" = smart_trends
+  "(1)" = smart_did,
+  "(2)" = smart_fx,
+  "(3)" = smart_trends
 )
 
 smart_coefs <- c(
-  "quartz_post" = "Quartz × post (May 2015)",
+  "quartz_post" = "Quartz × after Apple Watch (May 2015)",
   "quartz_fx" = "Quartz × 12-month FX change"
 )
 
 smart_rows <- tribble(
-  ~term, ~DiD, ~`+ Quartz × FX`, ~`+ Line trends`,
-  "Line × country FE", "X", "X", "X",
-  "Country × month FE", "X", "X", "X",
-  "Line-specific trends", "", "", "X"
+  ~term, ~`(1)`, ~`(2)`, ~`(3)`,
+  "Line × country FE", "Yes", "Yes", "Yes",
+  "Country × month FE", "Yes", "Yes", "Yes",
+  "Line-specific trends", "", "", "Yes"
 )
+attr(smart_rows, "position") <- 5:7 #right under the 2 coefficients
 
 modelsummary(
   smart_models,
+  title = "Smartwatches and Swiss Quartz Exports: Difference-in-Differences",
   coef_map = smart_coefs,
-  gof_map = c("nobs", "r2.within"),
+  gof_map = tribble(
+    ~raw, ~clean, ~fmt,
+    "nobs", "Observations", 0,
+    "r2.within", "Within R²", 3
+  ),
   add_rows = smart_rows,
   stars = c("*" = 0.1, "**" = 0.05, "***" = 0.01),
-  notes = "Dependent variable: log pieces. Steel lines (9102) only, 22 countries, monthly 2000-2026. Standard errors clustered by country in parentheses."
+  notes = c(
+    "Dependent variable: log pieces. Steel watches only: quartz (treated) vs mechanical (control).",
+    "22 countries, monthly 2000-2026. Standard errors clustered by country in parentheses."
+  )
 )
 
 

@@ -51,40 +51,80 @@ wealth_equity <- feols(
 
 # Table
 wealth_models <- list(
-  "Pooled" = wealth_pooled,
-  "By tier" = wealth_tier,
-  "+ GDP, RER" = wealth_controls,
-  "+ Equity" = wealth_equity
+  "(1)" = wealth_pooled,
+  "(2)" = wealth_tier,
+  "(3)" = wealth_controls,
+  "(4)" = wealth_equity
 )
 
 wealth_coefs <- c(
-  "log_top1" = "Top 1% share",
-  "tier::precious_mech:log_top1" = "Top 1% share × precious mech",
-  "tier::precious_quartz:log_top1" = "Top 1% share × precious quartz",
-  "tier::steel_mech:log_top1" = "Top 1% share × steel mech",
-  "tier::steel_quartz:log_top1" = "Top 1% share × steel quartz",
-  "tier::precious_mech:log_equity" = "Equity index × precious mech",
-  "tier::precious_quartz:log_equity" = "Equity index × precious quartz",
-  "tier::steel_mech:log_equity" = "Equity index × steel mech",
-  "tier::steel_quartz:log_equity" = "Equity index × steel quartz"
+  "log_top1" = "Top 1% share (all tiers)",
+  "tier::precious_mech:log_top1" = "Top 1% × precious mechanical",
+  "tier::precious_quartz:log_top1" = "Top 1% × precious quartz",
+  "tier::steel_mech:log_top1" = "Top 1% × steel mechanical",
+  "tier::steel_quartz:log_top1" = "Top 1% × steel quartz",
+  "tier::precious_mech:log_equity" = "Equity × precious mechanical",
+  "tier::precious_quartz:log_equity" = "Equity × precious quartz",
+  "tier::steel_mech:log_equity" = "Equity × steel mechanical",
+  "tier::steel_quartz:log_equity" = "Equity × steel quartz"
 )
 
 wealth_rows <- tribble(
-  ~term, ~Pooled, ~`By tier`, ~`+ GDP, RER`, ~`+ Equity`,
-  "GDP per capita, total GDP, RER", "", "", "X", "X",
-  "Country × tier FE", "X", "X", "X", "X",
-  "Tier × year FE", "X", "X", "X", "X"
+  ~term, ~`(1)`, ~`(2)`, ~`(3)`, ~`(4)`,
+  "GDP per capita, total GDP, RER", "", "", "Yes", "Yes",
+  "Country × tier FE", "Yes", "Yes", "Yes", "Yes",
+  "Tier × year FE", "Yes", "Yes", "Yes", "Yes"
 )
+attr(wealth_rows, "position") <- 19:21 #right under the 9 coefficients
 
 modelsummary(
   wealth_models,
+  title = "Top 1% Income Share, Stock Markets and Swiss Watch Exports, Annual",
   coef_map = wealth_coefs,
-  gof_map = c("nobs", "r2.within", "r2.within.adjusted"),
+  gof_map = tribble(
+    ~raw, ~clean, ~fmt,
+    "nobs", "Observations", 0,
+    "r2.within", "Within R²", 3,
+    "r2.within.adjusted", "Within R² (adjusted)", 3
+  ),
   add_rows = wealth_rows,
   stars = c("*" = 0.1, "**" = 0.05, "***" = 0.01),
-  notes = "Dependent variable: log export value. All variables in logs. Standard errors clustered by country in parentheses."
+  notes = c(
+    "Dependent variable: log export value. All variables in logs, so coefficients are elasticities.",
+    "Column 4 adds equity, which limits the sample to the 15 countries with a stock index. Standard errors clustered by country in parentheses."
+  )
 )
 
 
+
+#Top 1% and equity slopes by tier from the full model, with 95% intervals
+wealth_ci <- confint(wealth_equity)
+
+wealth_coef_plot_data <- tibble(
+  term = names(coef(wealth_equity)),
+  estimate = coef(wealth_equity),
+  low = wealth_ci[, 1],
+  high = wealth_ci[, 2]
+) |>
+  filter(str_detect(term, "log_top1|log_equity")) |>
+  mutate(
+    variable = if_else(str_detect(term, "log_top1"), "Top 1% income share", "Equity index"),
+    tier = str_extract(term, "precious_mech|precious_quartz|steel_mech|steel_quartz")
+  )
+
+wealth_coef_plot <- wealth_coef_plot_data |>
+  ggplot(aes(x = estimate, y = tier)) +
+  geom_vline(xintercept = 0, color = "grey50") +
+  geom_pointrange(aes(xmin = low, xmax = high)) +
+  facet_wrap(~ variable, scales = "free_x") +
+  labs(
+    x = "Elasticity of watch exports (95% interval)",
+    y = NULL,
+    title = "How Watch Exports Respond to Top-End Income and Stock Markets",
+    caption = "Full annual model: GDP per capita, total GDP and RER controls, country × tier and tier × year FE. Core 15 countries."
+  )
+
+wealth_coef_plot
+ggsave(here("output/figures", "wealth_coefficients.png"), wealth_coef_plot, width = 9, height = 4.5, dpi = 300)
 
 
