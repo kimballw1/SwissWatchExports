@@ -83,7 +83,14 @@ rolling_equity <- map_dfr(window_ends, function(end) {
     filter(str_detect(term, "d12_equity_l1")) |>
     mutate(window_end = year(end))
 }) |>
-  mutate(tier = str_extract(term, "precious_mech|precious_quartz|steel_mech|steel_quartz"))
+  mutate(
+    tier = str_extract(term, "precious_mech|precious_quartz|steel_mech|steel_quartz"),
+    tier = factor( #readable panel titles
+      tier,
+      levels = c("precious_mech", "precious_quartz", "steel_mech", "steel_quartz"),
+      labels = c("Precious mechanical", "Precious quartz", "Steel mechanical", "Steel quartz")
+    )
+  )
 
 rolling_plot <- rolling_equity |>
   ggplot(aes(x = window_end, y = estimate)) +
@@ -91,6 +98,7 @@ rolling_plot <- rolling_equity |>
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = 0.2) +
   geom_line() +
   facet_wrap(~ tier, nrow = 1) +
+  scale_x_continuous(breaks = c(2010, 2015, 2020)) + #fewer ticks so labels don't collide between panels
   labs(
     x = "End of 5-year window",
     y = "Equity elasticity (95% interval)",

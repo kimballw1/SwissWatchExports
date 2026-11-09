@@ -6,7 +6,7 @@ editor: visual
 
 # Overview
 
-How has the economic role of wrist watches changed over recent decades? In our consumer driven world where what you buy is meant to be seen as a signal of your accomplishments or a hint per say into ones inner personal workings, watches have fallen into a symbol for status and wealth.
+How has the economic role of wrist watches changed over recent decades? In our consumer driven world where what you buy is a signal of your accomplishments or a hint per say into ones inner personal workings, watches have fallen into a symbol for status, wealth, and sophistication.
 
 ## Introduction
 
@@ -23,3 +23,18 @@ $$
 $$
 
 once stock markets are controlled for, a higher top-1% share is associated with more imports in every tier, but the estimate is only clearly different from zero for steel quartz. The top tier the hypothesis was about, precious mechanical, shows no reliable link. That goes against the “wealth pulls the top tier” story,
+
+```{r}
+
+readRDS(here("output/Regressions_output", "wealth_monthly.rds"))
+```
+
+```{r}
+
+readRDS(here("output/Regressions_output", "wealth_annual.rds"))
+```
+
+```{r}
+
+readRDS(here("output/Regressions_output", "wealth_robustness.rds"))
+```

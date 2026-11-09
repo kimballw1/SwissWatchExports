@@ -114,7 +114,12 @@ wealth_coef_plot_data <- tibble(
   filter(str_detect(term, "log_top1|log_equity")) |>
   mutate(
     variable = if_else(str_detect(term, "log_top1"), "Top 1% income share", "Equity index"),
-    tier = str_extract(term, "precious_mech|precious_quartz|steel_mech|steel_quartz")
+    tier = str_extract(term, "precious_mech|precious_quartz|steel_mech|steel_quartz"),
+    tier = factor( #readable tier names, priciest at the top of the plot
+      tier,
+      levels = c("steel_quartz", "steel_mech", "precious_quartz", "precious_mech"),
+      labels = c("Steel quartz", "Steel mechanical", "Precious quartz", "Precious mechanical")
+    )
   )
 
 wealth_coef_plot <- wealth_coef_plot_data |>

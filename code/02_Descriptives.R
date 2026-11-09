@@ -23,10 +23,14 @@ value_units <- panel_line |>
   pivot_longer(c(value_index, units_index), names_to = "series", values_to = "index") |>
   ggplot(aes(x = year, y = index, color = series)) +
   geom_line() +
+  scale_color_discrete(
+    labels = c(units_index = "Pieces exported", value_index = "Export value (CHF)")
+  ) +
   labs(
     x = "Year",
     y = "Level relative to year 2000 (2000 = 100)",
-    caption = "Value vs. Unit Chart"
+    color = NULL,
+    title = "Swiss Watch Exports: Value vs Pieces"
   )
 
 value_units #calling table
@@ -36,11 +40,17 @@ ggsave(here("output/figures", "value_vs_units.png"), value_units, width = 8, hei
 # Tier composition chart (FH price bands)
 tier_composition <- fh_tiers |>
   filter(is.na(month), band != "total") |>
-  ggplot(aes(x = factor(year), y = exports_chf, fill = band)) +
-  geom_col(position = "fill") +
+  mutate(band = factor( #cheapest to priciest, with readable names
+    band,
+    levels = c("under_200", "200_500", "500_3000", "over_3000"),
+    labels = c("Under CHF 200", "CHF 200-500", "CHF 500-3,000", "Over CHF 3,000")
+  )) |>
+  ggplot(aes(x = year, y = exports_chf, fill = band)) + #numeric year keeps the 5-year gaps before 2020 visible
+  geom_col(position = "fill", width = 0.8) +
   labs(
     x = "Year",
     y = "Share of export value",
+    fill = "Export price band",
     title = "Composition of Exports by Price Band"
   )
 
@@ -50,14 +60,20 @@ ggsave(here("output/figures", "tier_composition.png"), tier_composition, width =
 
 #Unit value ridge line chart
 unitvalue_ridgeline <- panel_line |> 
-  mutate(year = year(month)) |> 
-  mutate(log_uv = log(unit_value)) |> 
+  mutate(year = year(month)) |>
+  filter(year <= 2025) |> #2026 is a partial year
+  mutate(log_uv = log(unit_value)) |>
   ggplot(aes(x = log_uv, y = factor(year))) +
-  ggridges::geom_density_ridges(stat = "density", aes(weight = units, height = after_stat(density))) + 
+  ggridges::geom_density_ridges(stat = "density", aes(weight = units, height = after_stat(density))) +
+  scale_x_continuous( #log scale, labeled in CHF so it reads as prices
+    breaks = log(c(20, 100, 500, 3000, 20000, 100000)),
+    labels = c("20", "100", "500", "3,000", "20,000", "100,000")
+  ) +
+  coord_cartesian(xlim = c(3, 11.5)) + #zoom to where the data is
   labs(
-    x = "Log(Unit Value)",
+    x = "Unit value (CHF per piece, log scale)",
     y = "Year",
-    title = "Distribution of Log(Unit Value) by Year"
+    title = "Distribution of Unit Values by Year"
   )
 
 unitvalue_ridgeline #calling table
@@ -81,11 +97,15 @@ mech_plot <- panel_line |>
     mech_units_share = mech_units / units * 100
   ) |>
   pivot_longer(c(mech_exports_share, mech_units_share), names_to = "series", values_to = "share") |>
-  ggplot(aes(x = year, y = share, color = series)) + 
+  ggplot(aes(x = year, y = share, color = series)) +
   geom_line() +
+  scale_color_discrete(
+    labels = c(mech_exports_share = "Share of export value", mech_units_share = "Share of pieces")
+  ) +
   labs(
     x = "Year",
     y = "Share of Mechanical Watches (%)",
+    color = NULL,
     title = "Share of Mechanical Watches in Exports"
   )
 
