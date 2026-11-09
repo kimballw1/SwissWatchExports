@@ -4,9 +4,15 @@ format: html
 editor: visual
 ---
 
+# Overview
+
+How has the economic role of wrist watches changed over recent decades? In our consumer driven world where what you buy is meant to be seen as a signal of your accomplishments or a hint per say into ones inner personal workings, watches have fallen into a symbol for status and wealth.
+
 ## Introduction
 
-What does the Telling time is inextricably linked to the function of modern society. The idea of a watch and its connection to status as the mark of wealth is a large driving force in the popularity and spread of the modern wrist watch over the past century.
+## Background
+
+## 
 
 fixed affects aborbs anything thats constant within the group wether you measured it or not so for a example a country level fixed affects would control (language, distance from swiss, culture, colonial ties, how much it has always liked watches). Fixed effects would absorb a population average population but not its population growth over time .\
 \

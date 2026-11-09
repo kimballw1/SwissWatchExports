@@ -79,7 +79,7 @@ wealth_rows <- tribble(
 )
 attr(wealth_rows, "position") <- 19:21 #right under the 9 coefficients
 
-modelsummary(
+wealth_table <- modelsummary(
   wealth_models,
   title = "Top 1% Income Share, Stock Markets and Swiss Watch Exports, Annual",
   coef_map = wealth_coefs,
@@ -96,6 +96,9 @@ modelsummary(
     "Column 4 adds equity, which limits the sample to the 15 countries with a stock index. Standard errors clustered by country in parentheses."
   )
 )
+
+wealth_table
+saveRDS(wealth_table, here("output/Regressions_output", "wealth_annual.rds")) #read in Quarto with readRDS()
 
 
 

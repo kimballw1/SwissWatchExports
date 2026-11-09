@@ -42,7 +42,7 @@ diff_rows <- tribble(
 )
 attr(diff_rows, "position") <- 9:11 #right under the 4 coefficients
 
-modelsummary(
+diff_table <- modelsummary(
   list("(1)" = wealth_diff),
   title = "Does the Top 1% Effect Differ by Tier?",
   coef_map = diff_coefs,
@@ -57,6 +57,9 @@ modelsummary(
     "15 countries. Standard errors clustered by country in parentheses."
   )
 )
+
+diff_table
+saveRDS(diff_table, here("output/Regressions_output", "wealth_tier_diff.rds"))
 
 
 # Robustness: drop the hubs, and split value into units and unit value
@@ -112,7 +115,7 @@ robust_rows <- tribble(
 )
 attr(robust_rows, "position") <- c(1, 2, 19, 20, 21) #outcome and sample on top, controls under the 8 coefficients
 
-modelsummary(
+robust_table <- modelsummary(
   robust_models,
   title = "Wealth Regression Robustness: Dropping Hubs and Splitting Value into Units and Price",
   coef_map = robust_coefs,
@@ -128,3 +131,6 @@ modelsummary(
     "Standard errors clustered by country in parentheses."
   )
 )
+
+robust_table
+saveRDS(robust_table, here("output/Regressions_output", "wealth_robustness.rds"))

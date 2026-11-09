@@ -73,7 +73,7 @@ smart_rows <- tribble(
 )
 attr(smart_rows, "position") <- 5:7 #right under the 2 coefficients
 
-modelsummary(
+smart_table <- modelsummary(
   smart_models,
   title = "Smartwatches and Swiss Quartz Exports: Difference-in-Differences",
   coef_map = smart_coefs,
@@ -89,6 +89,9 @@ modelsummary(
     "22 countries, monthly 2000-2026. Standard errors clustered by country in parentheses."
   )
 )
+
+smart_table
+saveRDS(smart_table, here("output/Regressions_output", "smartwatch_did.rds"))
 
 
 # Event study: quartz vs mechanical gap by year, 2014 = 0

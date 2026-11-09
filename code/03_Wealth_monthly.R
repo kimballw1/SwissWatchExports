@@ -44,7 +44,7 @@ monthly_rows <- tribble(
 )
 attr(monthly_rows, "position") <- 9:12 #put these rows right under the coefficients
 
-modelsummary(
+monthly_table <- modelsummary(
   list("(1)" = equity_monthly, "(2)" = equity_monthly_cy),
   title = "Stock Market Gains and Swiss Watch Exports, Monthly",
   coef_map = c(
@@ -65,6 +65,9 @@ modelsummary(
     "All changes in logs. 15 countries. Standard errors clustered by country in parentheses."
   )
 )
+
+monthly_table
+saveRDS(monthly_table, here("output/Regressions_output", "wealth_monthly.rds"))
 
 
 # Rolling 5-year windows, one regression per window ending each December
