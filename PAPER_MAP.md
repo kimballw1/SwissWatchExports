@@ -1,7 +1,5 @@
 # Paper Map
 
-How every table and figure in `output/` fits into the paper, what each one says, and where it goes. Last updated Nov 9, 2026.
-
 ## The story
 
 The title gives the structure: fewer, pricier, richer. The decomposition splits export growth into those three pieces, and each regression explains one of them.
@@ -9,12 +7,29 @@ The title gives the structure: fewer, pricier, richer. The decomposition splits 
 | Piece | The fact | What explains it |
 | --- | --- | --- |
 | Fewer (volume −0.69 log points, 2012–25) | Units fall while value rises | Smartwatches. Steel quartz falls about 75% relative to steel mechanical, starting around 2017 (DiD) |
-| Pricier (price +0.63) | Same-watch prices are 2.6× their 2000 level, CPI is 1.15× | Not gold. Pass-through is null, so this looks like pricing power, not input costs |
-| Richer (mix +0.25) | Over-3,000 share of value goes from about a third to 80%. Mechanical goes from 48% to 87% of value | Wealth lifts all tiers about equally, so the mix shift isn't rich buyers trading up. More likely the bottom fell out (quartz) and brands moved upmarket |
+| Pricier (price +0.63) | Unit values within each tariff line are 2.6× their 2000 level, CPI is 1.15× | Not gold. Pass-through is null, so this is price hikes and upgrading within categories, not input costs |
+| Richer (mix +0.25) | Over-3,000 share of value goes from about a third to 80%. Mechanical goes from 48% to 86% of value | The bottom fell out. The whole mix effect comes from steel quartz shrinking (see the mix test below). Wealth lifts all tiers about equally, so it isn't rich buyers trading up |
 
 The plan's hypothesis was that wealth and gold drive the top tier and smartwatches hit the bottom. One part holds (smartwatches) and two don't (wealth isn't top-specific, gold doesn't pass through). The nulls help the story: the price surge looks like brand strategy, not demand from the rich or the cost of gold.
 
-To check before writing it as a finding: the "bottom fell out" explanation for the mix term is an interpretation. Redo the mix term without steel quartz and see how much is left.
+## Mix test: is the mix effect just quartz collapsing?
+
+I reran the decomposition on subsets of tariff lines (same method as `02_Price:Volume:Decomposition.R`). Cumulative log changes, 2012–2025:
+
+| Sample | Value | Volume | Price | Mix |
+| --- | --- | --- | --- | --- |
+| All lines | +0.19 | −0.69 | +0.63 | +0.25 |
+| Without steel quartz | +0.28 | −0.28 | +0.66 | −0.09 |
+| Mechanical only | +0.31 | −0.28 | +0.67 | −0.08 |
+
+- Mix is entirely the cheap end shrinking. Without steel quartz it goes from +0.25 to −0.09. Among the remaining watches the mix moved slightly down-market: steel mechanical's share of value rose from 44% to 52%, while precious stayed at about 39%.
+- Price doesn't depend on quartz. It's about +0.65 in every sample. Unit values roughly doubled within lines: precious mechanical CHF 14,800 to 29,100, steel mechanical 1,370 to 2,560, steel quartz 160 to 244.
+- Most of the volume drop is steel quartz: 12.8 of the 14.6 million fewer pieces since 2012. In logs, units fall 0.69 overall and 0.28 without it.
+- Steel quartz is still 64% of pieces in 2025 (76% in 2012) but only 9% of value (18% in 2012). It shrank, it didn't disappear.
+
+The "price" term is the change in unit value within each tariff line, and the lines are broad (9102.21 covers a CHF 500 automatic and a CHF 15,000 steel Rolex). So it's price hikes plus upgrading within a line, and the data can't separate the two. Don't call it "same-watch" prices.
+
+What I can write: Swiss watch exports shifted toward expensive categories only because cheap quartz collapsed. Within every category, unit values roughly doubled, through price hikes, upgrading, or both, and that is what carried export value.
 
 ## Reading the annual wealth table
 
@@ -37,13 +52,14 @@ What I can say: a rising top 1% share raises Swiss watch imports by about 0.8% p
 
 | Section | Output | What it says |
 | --- | --- | --- |
-| 1. Intro | `figures/value_vs_units.png` | Value is about 2.5× its 2000 level while units are down about 40%. Cover candidate |
+| 1. Intro | `figures/value_vs_units.png` | Value is about 2.6× its 2000 level while units are down by half (29.7 to 14.6 million). Cover candidate |
 | 2. Facts | `figures/tier_composition.png` | Over-3,000 band goes from a third to 80% of value |
-| | `figures/mechanical_watch_share.png` | Mechanical is 87% of value but only about 37% of units |
+| | `figures/mechanical_watch_share.png` | Mechanical is 86% of value but only about 36% of units |
 | | `figures/top_destinations.png` | HK collapses (4.1 to 1.7bn CHF), the US doubles, JP, GB and SG grow |
 | | `tables/growth_by_tier.csv` (T1) | 2019–25: precious value +33–38% while units fall; steel quartz units −30% |
 | 3. Decomposition | `figures/decomposition_waterfall.png` | The headline: −0.69 volume, +0.63 price, +0.25 mix = +0.19 total |
-| | `figures/price_index_vs_cpi.png` | Same-watch prices far outrun inflation and speed up after 2019 |
+| | `figures/price_index_vs_cpi.png` | Within-category unit values far outrun inflation and speed up after 2019 |
+| | Mix test (in text or a small table) | Mix effect disappears without steel quartz; price effect doesn't |
 | | `figures/decomposition_by_year.png` | Price is positive every year since 2015; volume drives the crashes (2009, 2020) |
 | 4a. Smartwatches | `Regressions_output/smartwatch_did.rds`, `figures/smartwatch_event_study.png` | Strongest causal result. Be upfront about the 2000–06 pre-trend; column 3 (−0.53) is the conservative number |
 | 4b. Wealth | `Regressions_output/wealth_annual.rds`, `Regressions_output/wealth_robustness.rds` | Broad, quantity-driven top 1% effect; equity not significant annually |
@@ -61,19 +77,3 @@ What I can say: a rising top 1% share raises Swiss watch imports by about 0.8% p
 
 - `figures/polarization_index.png`: the monthly version of the over-3,000 share in `tier_composition`. It was built for forecasting, which is dropped.
 - `tables/decomposition_annual.csv` as a paper table: the two decomposition figures carry it.
-
-## Figure polish
-
-Done Nov 9, 2026. All figures regenerated.
-
-- [x] `value_vs_units`: legend now reads "Pieces exported" and "Export value (CHF)", added a title (`02_Descriptives.R`).
-- [x] `mechanical_watch_share`: legend now reads "Share of export value" and "Share of pieces" (`02_Descriptives.R`).
-- [x] `tier_composition`: bands renamed (Under CHF 200 ... Over CHF 3,000) and put in price order. Year is now numeric, so the 5-year gaps before 2020 show as real gaps (`02_Descriptives.R`).
-- [x] `wealth_coefficients`: readable tier names, precious mechanical at the top (`03_Wealth_reg.R`).
-- [x] `rolling_equity_elasticity`: readable panel titles, and fewer year ticks so labels don't run together between panels (`03_Wealth_monthly.R`).
-- [x] `unitvalue_ridgeline`: zoomed to the data, x-axis labeled in CHF (20 to 100,000) on a log scale, partial-year 2026 dropped (`02_Descriptives.R`).
-
-Still open:
-
-- `tier_composition` only has FH band data for 2000, 2005, 2010, 2015 and 2020–25, so the gaps are real missing years, not a plotting choice. Say so in the figure note.
-- The regression tables didn't need changes. They already have titles, notes and clean labels.

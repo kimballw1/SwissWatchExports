@@ -4,3 +4,6 @@
 .Ruserdata
 .DS_Store
 data/raw/bazg_watch_exports_monthly.csv
+
+/.quarto/
+**/*.quarto_ipynb

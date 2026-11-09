@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fewer, Pricier, Richer</title>
+<style>
+  :root { --bg:#0a0a0a; --line:#232323; --fg:#e8e8e8; --dim:#9a9a9a; --faint:#666; --blue:#4c8dff; --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace; --sans:-apple-system,BlinkMacSystemFont,"Inter","Helvetica Neue",Arial,sans-serif; }
+  * { box-sizing:border-box; }
+  html { background:var(--bg); }
+  body { margin:0; background:var(--bg); color:var(--fg); font:13px/1.5 var(--mono); -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  canvas { display:block; width:100%; height:100%; }
+  button { font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
+  a { color:var(--blue); text-decoration:none; }
+
+  /* landing */
+  .hero { position:relative; height:100vh; min-height:640px; overflow:hidden; border-bottom:1px solid var(--line); }
+  .hero canvas { position:absolute; inset:0; }
+  .hero .title { position:absolute; left:28px; top:26px; max-width:min(400px, 60vw); pointer-events:none; }
+  .kicker { color:var(--dim); letter-spacing:.14em; font-size:11px; }
+  h1 { font:500 clamp(28px, 3.6vw, 46px)/1.02 var(--sans); letter-spacing:-.025em; margin:10px 0 12px; }
+  .lede { color:#bdbdbd; font:400 15px/1.5 var(--sans); margin:0; }
+  .hero .metric { position:absolute; right:28px; top:28px; text-align:right; }
+  .hero .metric .note { color:var(--dim); font-size:11px; margin-top:8px; letter-spacing:.06em; }
+  .hud { position:absolute; left:28px; right:28px; bottom:22px; display:flex; align-items:flex-end; gap:24px; pointer-events:none; }
+  .hud > * { pointer-events:auto; }
+  .readout .date { font:500 26px/1 var(--sans); letter-spacing:-.01em; }
+  .readout .tot { color:var(--blue); margin-top:6px; letter-spacing:.05em; font-size:11px; }
+  .readout .sub { color:var(--dim); letter-spacing:.08em; font-size:11px; }
+  .timeline { flex:1; display:flex; align-items:center; gap:12px; max-width:560px; margin:0 auto; }
+  .hint { color:var(--faint); letter-spacing:.1em; font-size:11px; text-align:right; white-space:nowrap; }
+  .hint button { color:var(--dim); border:1px solid #333; border-radius:20px; padding:4px 11px; letter-spacing:.1em; font-size:11px; margin-top:8px; }
+  .hint button:hover { color:var(--blue); border-color:var(--blue); }
+
+  .play { width:30px; height:30px; border:1px solid #3a3a3a; border-radius:50%; font-size:11px; flex:none; color:var(--fg); }
+  .play:hover { border-color:var(--blue); color:var(--blue); }
+  input[type=range] { -webkit-appearance:none; appearance:none; flex:1; height:18px; background:transparent; cursor:pointer; min-width:80px; }
+  input[type=range]::-webkit-slider-runnable-track { height:1px; background:repeating-linear-gradient(90deg,#666 0 2px,transparent 2px 6px); }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:11px; height:11px; border-radius:50%; background:var(--blue); margin-top:-5px; box-shadow:0 0 0 4px rgba(76,141,255,.18); }
+  input[type=range]::-moz-range-track { height:1px; background:#555; }
+  input[type=range]::-moz-range-thumb { width:11px; height:11px; border:0; border-radius:50%; background:var(--blue); }
+
+  .seg { display:inline-flex; border:1px solid #303030; border-radius:22px; padding:2px; gap:2px; }
+  .seg button { white-space:nowrap; padding:4px 11px; border-radius:20px; color:var(--dim); letter-spacing:.1em; font-size:11px; }
+  .seg button:hover { color:var(--fg); }
+  .seg button.on { background:var(--blue); color:#05122b; }
+
+  /* country panel */
+  .panel { position:absolute; right:20px; top:84px; bottom:88px; width:348px; max-width:calc(100vw - 40px); background:rgba(12,12,13,.9); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid #2a2a2a; border-radius:14px; padding:18px 18px 14px; overflow-y:auto; transform:translateX(calc(100% + 30px)); opacity:0; transition:transform .5s cubic-bezier(.2,.9,.2,1), opacity .3s; scrollbar-width:thin; scrollbar-color:#333 transparent; }
+  .panel.open { transform:none; opacity:1; }
+  .panel .x { position:absolute; right:12px; top:10px; color:var(--dim); font-size:16px; padding:4px 8px; }
+  .panel h2 { font:500 21px/1.1 var(--sans); letter-spacing:-.01em; margin:2px 28px 2px 0; }
+  .panel .when { color:var(--dim); letter-spacing:.1em; font-size:11px; }
+  .stats { display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; margin:14px 0 6px; }
+  .stats b { display:block; font:500 17px/1.15 var(--sans); }
+  .stats span { color:var(--dim); letter-spacing:.1em; font-size:11px; }
+  .stats .blue b { color:var(--blue); }
+  .panel h3 { font-size:11px; font-weight:400; letter-spacing:.14em; color:var(--dim); margin:18px 0 8px; padding-top:12px; border-top:1px solid #222; display:flex; justify-content:space-between; align-items:center; gap:8px; white-space:nowrap; }
+  .panel svg { display:block; width:100%; height:auto; overflow:visible; }
+  .panel p { color:#b4b4b4; font:400 13px/1.5 var(--sans); margin:8px 0 0; }
+  .panel .seg button { padding:2px 8px; font-size:11px; }
+  .mini { display:grid; grid-template-columns:1fr 96px; gap:4px 10px; align-items:center; margin-top:8px; }
+  .mini .k { color:var(--dim); letter-spacing:.1em; font-size:11px; }
+  .mini .v { font:500 13px var(--sans); }
+  .mini .v i { color:var(--dim); font-style:normal; font-weight:400; }
+  .key { display:flex; flex-wrap:wrap; gap:4px 10px; color:var(--dim); font-size:11px; letter-spacing:.08em; margin-top:6px; }
+  .key i { display:inline-block; width:6px; height:6px; border-radius:50%; margin-right:4px; }
+
+  /* scroll sections */
+  .block { max-width:1180px; margin:0 auto; padding:72px 28px 8px; }
+  .block .num { color:var(--blue); letter-spacing:.14em; font-size:11px; }
+  .block h2 { font:500 clamp(22px, 2.4vw, 30px)/1.1 var(--sans); letter-spacing:-.02em; margin:8px 0 8px; }
+  .block p.say { color:#bdbdbd; font:400 15px/1.55 var(--sans); max-width:640px; margin:0 0 14px; }
+  .frame { position:relative; height:min(620px, 78vh); min-height:440px; border:1px solid var(--line); border-radius:16px; background:#0c0c0c; overflow:hidden; }
+  .frame .corner { position:absolute; left:16px; top:14px; pointer-events:none; }
+  .frame .corner .big { font:500 24px/1 var(--sans); }
+  .frame .corner .sm { color:var(--dim); letter-spacing:.08em; font-size:11px; margin-top:5px; }
+  .frame .corner .bl { color:var(--blue); letter-spacing:.06em; font-size:11px; margin-top:5px; }
+  .bar { display:flex; align-items:center; gap:14px; margin-top:12px; flex-wrap:wrap; }
+  .bar .src { margin-left:auto; color:var(--faint); letter-spacing:.08em; font-size:11px; }
+  .bar .tip { color:var(--dim); letter-spacing:.1em; font-size:11px; }
+  .bar .timeline { margin:0; min-width:220px; }
+
+  .paper { max-width:1180px; margin:0 auto; padding:72px 28px 80px; }
+  .paper iframe { width:100%; height:86vh; border:1px solid var(--line); border-radius:16px; background:#fff; }
+  footer { border-top:1px solid var(--line); color:var(--faint); padding:22px 28px 40px; letter-spacing:.06em; font-size:11px; max-width:1180px; margin:0 auto; }
+
+  @media (max-width:760px) {
+    .hero .metric { top:auto; bottom:108px; right:16px; left:16px; text-align:left; }
+    .hero .metric .note { display:none; }
+    .hero .title { left:16px; top:16px; }
+    .hud { left:16px; right:16px; flex-wrap:wrap; gap:10px; }
+    .hint { display:none; }
+    .timeline { min-width:100%; order:3; }
+    .panel { top:auto; bottom:0; right:0; width:100vw; max-width:100vw; height:62vh; border-radius:14px 14px 0 0; transform:translateY(105%); }
+    .block, .paper { padding-left:16px; padding-right:16px; }
+    .seg button { padding:4px 8px; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <canvas id="globe"></canvas>
+  <div class="title">
+    <div class="kicker">SWISS WATCH EXPORTS · 2000 TO 2026</div>
+    <h1>Fewer, pricier, richer</h1>
+    <p class="lede">Switzerland ships half as many watches as it did in 2000 for 2.6 times the money. Spin the globe and click a country to see what changed there.</p>
+  </div>
+  <div class="metric">
+    <div class="seg" id="metric">
+      <button data-v="value" class="on">VALUE</button><button data-v="units">PIECES</button><button data-v="price">PRICE PER WATCH</button>
+    </div>
+    <div class="note" id="metricNote"></div>
+  </div>
+  <aside class="panel" id="panel"></aside>
+  <div class="hud">
+    <div class="readout">
+      <div class="sub">12 MONTHS TO</div>
+      <div class="date" id="gDate"></div>
+      <div class="tot" id="gTot"></div>
+    </div>
+    <div class="timeline" id="gTime"><button class="play" aria-label="Play">▶</button><input type="range" aria-label="Month"></div>
+    <div class="hint"><button id="worldBtn">ALL DESTINATIONS</button></div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="num">01</div>
+  <h2>Where the money went, and where the watches went</h2>
+  <p class="say">The eight biggest destinations over time. Switch from value to pieces: the money climbs while the count falls away.</p>
+  <div class="frame"><canvas id="terrain"></canvas></div>
+  <div class="bar">
+    <div class="seg" id="terrainSeg"><button data-v="value" class="on">VALUE</button><button data-v="units">PIECES</button></div>
+    <span class="tip">DRAG TO TURN IT</span>
+  </div>
+</section>
+
+<section class="block">
+  <div class="num">02</div>
+  <h2>The price distribution marches right</h2>
+  <p class="say">One ridge per year, 2000 at the back, 2025 in front. Cheap watches on the left, expensive on the right. The money has moved right; the watches mostly have not.</p>
+  <div class="frame"><canvas id="ridges"></canvas></div>
+  <div class="bar">
+    <div class="seg" id="ridgeSeg"><button data-v="money" class="on">WHERE THE MONEY IS</button><button data-v="pieces">WHERE THE WATCHES ARE</button></div>
+    <span class="tip">DRAG TO TURN IT</span>
+  </div>
+</section>
+
+<section class="block">
+  <div class="num">03</div>
+  <h2>Count the watches, then count the money</h2>
+  <p class="say">Press play. The cheap quartz watches drain away. Then switch to money and watch the mechanical bars fill.</p>
+  <div class="frame">
+    <canvas id="dots"></canvas>
+    <div class="corner"><div class="big" id="pYear"></div><div class="bl" id="pTot"></div><div class="sm" id="pUnit"></div></div>
+  </div>
+  <div class="bar">
+    <div class="seg" id="dotSeg"><button data-v="units" class="on">PIECES</button><button data-v="value">MONEY</button></div>
+    <div class="timeline" id="pTime"><button class="play" aria-label="Play">▶</button><input type="range" aria-label="Year"></div>
+
+  </div>
+</section>
+
+<section class="paper" id="paper">
+  <div class="kicker" style="color:var(--blue)">04</div>
+  <h2 style="font:500 clamp(22px,2.4vw,30px)/1.1 var(--sans);letter-spacing:-.02em;margin:8px 0 8px">The paper</h2>
+  <p class="lede" style="margin-bottom:16px">The full write-up, with the regressions behind the numbers above. <a href="paper.html" target="_blank" rel="noopener">Open it on its own page</a></p>
+  <iframe src="paper.html" title="Fewer, Pricier, Richer: the paper" loading="lazy"></iframe>
+</section>
+
+<footer>DATA: SWISS FEDERAL OFFICE FOR CUSTOMS AND BORDER SECURITY, MONTHLY EXPORTS BY TARIFF LINE AND DESTINATION, JAN 2000 TO SEP 2026 · WORLD INEQUALITY DATABASE · WORLD BANK. VALUES ARE DECLARED EXPORT VALUES IN FRANCS, NOT RETAIL PRICES.</footer>
+
+<script>
+const D = /*DATA*/;
+/*SCRIPTS*/
+</script>
+</body>
+</html>

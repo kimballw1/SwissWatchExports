@@ -1,12 +1,22 @@
 ---
-title: "The Modern Economics of the Swiss Watch Market"
+title: "Fewer, Pricier, Richer"
+subtitle: "What Swiss customs data says about why watches got so expensive"
+author: "Kimball Weeks"
 format: html
-editor: visual
+execute:
+  echo: false
+  warning: false
+  message: false
 ---
 
-# Overview
+## Overview
 
-How has the economic role of wrist watches changed over recent decades? In our consumer driven world where what you buy is a signal of your accomplishments or a hint per say into ones inner personal workings, watches have fallen into a symbol for status, wealth, and sophistication.
+```{r}
+library(here)
+library(tinytable)
+```
+
+![](images/clipboard-3069118273.png){width="442"}
 
 ## Introduction
 

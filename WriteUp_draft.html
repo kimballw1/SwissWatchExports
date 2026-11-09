@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kimball Weeks">
+
+<title>Fewer, Pricier, Richer</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="WriteUp_draft_files/libs/clipboard/clipboard.min.js"></script>
+<script src="WriteUp_draft_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="WriteUp_draft_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="WriteUp_draft_files/libs/quarto-html/popper.min.js"></script>
+<script src="WriteUp_draft_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="WriteUp_draft_files/libs/quarto-html/anchor.min.js"></script>
+<link href="WriteUp_draft_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="WriteUp_draft_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="WriteUp_draft_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="WriteUp_draft_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="WriteUp_draft_files/libs/bootstrap/bootstrap-917079515d91bccb85b543faf8aa8bb6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Fewer, Pricier, Richer</h1>
+<p class="subtitle lead">What Swiss customs data says about why watches got so expensive</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Kimball Weeks </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>In 2000 Switzerland exported 29.7 million watches worth CHF 9.3 billion. In 2025 it exported 14.6 million watches worth CHF 24.4 billion. That is half as many watches for 2.6 times the money. The average watch leaving the country went from about CHF 310 to about CHF 1,670.</p>
+<p>The usual explanation is about status. Nobody needs a watch to tell the time anymore, so what’s left is the watch as a signal of wealth and taste, and a signal works better the more it costs. In that story the buyers are the rich, the rich have gotten richer, and so watches have gotten pricier. Add a gold price that is six times what it was in 2000 and the story looks complete.</p>
+<p>I wanted to check that story against the data. I took 26 years of Swiss customs records, split the growth in export value into how many watches were shipped, what they cost, and which kinds were sold, and then tested one explanation for each piece: smartwatches, wealth at the top, and gold.</p>
+<p>The status story turns out to be about half right. Watches did get much more expensive, in every category. But the shift toward expensive watches comes from the cheap end shrinking, not from the top growing. Rising top incomes go with more watch imports at every price point, not mainly the expensive ones. And I can’t find gold in the prices at all.</p>
+<section id="the-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-data">The data</h2>
+<p>Everything starts from the monthly export statistics of the Swiss customs office. Each row is a tariff line, a destination country and a month, with the number of pieces and the declared value in francs, from January 2000 to September 2026. For anything annual I stop at 2025, the last full year.</p>
+<p>Wristwatches sit under two headings. 9101 is watches with a case of precious metal, and 9102 is everything else, which is mostly steel. Within each heading some lines are quartz (battery powered) and some are mechanical. That gives four groups, which I use throughout:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Group</th>
+<th>Share of pieces, 2025</th>
+<th>Share of value, 2025</th>
+<th>Average export value, 2025</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Precious mechanical</td>
+<td>2%</td>
+<td>34%</td>
+<td>CHF 29,100</td>
+</tr>
+<tr class="even">
+<td>Precious quartz</td>
+<td>1%</td>
+<td>5%</td>
+<td>CHF 12,100</td>
+</tr>
+<tr class="odd">
+<td>Steel mechanical</td>
+<td>34%</td>
+<td>52%</td>
+<td>CHF 2,560</td>
+</tr>
+<tr class="even">
+<td>Steel quartz</td>
+<td>64%</td>
+<td>9%</td>
+<td>CHF 244</td>
+</tr>
+</tbody>
+</table>
+<p>Two things about these numbers matter for everything below.</p>
+<p>First, they are export values, meaning what the shipment is declared at when it leaves Switzerland. They sit below what the watch sells for in a shop.</p>
+<p>Second, I never see the price of a particular watch. I see value divided by pieces within a tariff line, which I’ll call unit value. The lines are broad. The steel mechanical lines hold a CHF 500 automatic and a steel sports watch that exports for many thousands. So when a unit value rises, it could be the same watches costing more, or better watches being sold, and I can’t separate the two.</p>
+<p>To explain the patterns I merge in top 1% income shares from the World Inequality Database, GDP from the World Bank, national stock indexes, exchange rates and the gold price. That covers 22 destination countries, 15 of which also have a stock index.</p>
+</section>
+<section id="what-changed" class="level2">
+<h2 class="anchored" data-anchor-id="what-changed">What changed</h2>
+<p>A few things stand out before any modelling.</p>
+<p>The gap between value and pieces opened in two stages. From 2000 to 2012 the number of watches barely moved (29.7 million to 29.2 million) while value more than doubled. After 2012 value grew only 21% and pieces fell by half.</p>
+<p>[FIGURE: value_vs_units.png]</p>
+<p>The expensive end took over the money. The Federation of the Swiss Watch Industry reports exports by price band. Watches exported at over CHF 3,000 were 34% of value in 2000 and 80% in 2025, although they are only 13% of pieces. Watches under CHF 200 are still 57% of pieces but 3% of value.</p>
+<p>[FIGURE: tier_composition.png]</p>
+<p>Mechanical took over from quartz. Mechanical watches were 48% of export value and 8% of pieces in 2000. In 2025 they were 86% of value and 36% of pieces.</p>
+<p>[FIGURE: mechanical_watch_share.png]</p>
+<p>The destinations moved too. Hong Kong was the largest market in 2012 at CHF 4.1 billion and is down to 1.7 billion. The US doubled from 2.1 to 4.2 billion and is now the largest by a wide margin.</p>
+<p>[FIGURE: top_destinations.png]</p>
+</section>
+<section id="splitting-the-growth-into-volume-price-and-mix" class="level2">
+<h2 class="anchored" data-anchor-id="splitting-the-growth-into-volume-price-and-mix">Splitting the growth into volume, price and mix</h2>
+<p>The change in export value can be split exactly into three parts. Let <span class="math inline">\(V_t\)</span> be total value, <span class="math inline">\(Q_t\)</span> total pieces, and <span class="math inline">\(p_{it}\)</span> the unit value of tariff line <span class="math inline">\(i\)</span> in year <span class="math inline">\(t\)</span>. Then</p>
+<p><span class="math display">\[
+\Delta \ln V_t = \underbrace{\Delta \ln Q_t}_{\text{volume}} + \underbrace{\sum_i \bar{s}_{it}\, \Delta \ln p_{it}}_{\text{price}} + \underbrace{\Big[\Delta \ln (V_t / Q_t) - \sum_i \bar{s}_{it}\, \Delta \ln p_{it}\Big]}_{\text{mix}}
+\]</span></p>
+<p>Volume is the change in the number of watches. Price is the change in unit value within each of the ten tariff lines, weighted by each line’s share of value averaged over the two years (a Törnqvist index). Mix is whatever change in the overall average value per watch is not explained by changes within lines, which is the effect of selling relatively more watches from the expensive lines. Everything is in log points, so the three parts add up to the total and the years add up to the period.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Period</th>
+<th>Value</th>
+<th>Volume</th>
+<th>Price</th>
+<th>Mix</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2000 to 2012</td>
+<td>+0.78</td>
+<td>−0.02</td>
+<td>+0.34</td>
+<td>+0.46</td>
+</tr>
+<tr class="even">
+<td>2012 to 2025</td>
+<td>+0.19</td>
+<td>−0.69</td>
+<td>+0.63</td>
+<td>+0.25</td>
+</tr>
+<tr class="odd">
+<td>2000 to 2025</td>
+<td>+0.97</td>
+<td>−0.71</td>
+<td>+0.96</td>
+<td>+0.71</td>
+</tr>
+</tbody>
+</table>
+<p>A log change of −0.69 is a halving and +0.63 is an 87% increase. So since 2012 there are half as many watches, unit values within each line are up 87%, the shift toward expensive lines adds another 29%, and together that makes 21% more value.</p>
+<p>[FIGURE: decomposition_waterfall.png]</p>
+<p>The two periods look different. Before 2012 the growth came mostly from mix: about the same number of watches, but more of them mechanical. After 2012 it came from price, against a collapse in volume.</p>
+<p>Chaining the price term year by year gives a price index for Swiss watches. With 2000 as 100, it stands at 262 in 2025. Swiss consumer prices went from 100 to 115 over the same years. The increase has also sped up. The index was 170 in 2019, so it rose 54% in six years. Price has been positive in every year since 2015, including 2020, when volume fell by a third in a single year.</p>
+<p>[FIGURE: price_index_vs_cpi.png]</p>
+<p>[FIGURE: decomposition_by_year.png]</p>
+</section>
+<section id="is-the-shift-toward-expensive-watches-the-top-growing-or-the-bottom-shrinking" class="level2">
+<h2 class="anchored" data-anchor-id="is-the-shift-toward-expensive-watches-the-top-growing-or-the-bottom-shrinking">Is the shift toward expensive watches the top growing or the bottom shrinking?</h2>
+<p>The mix term is the part that sounds like the status story: exports moving toward expensive kinds of watch. But shares can move because the top grows or because the bottom shrinks, and those are different stories. To tell them apart I reran the decomposition without the steel quartz lines.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Sample, 2012 to 2025</th>
+<th>Value</th>
+<th>Volume</th>
+<th>Price</th>
+<th>Mix</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>All lines</td>
+<td>+0.19</td>
+<td>−0.69</td>
+<td>+0.63</td>
+<td>+0.25</td>
+</tr>
+<tr class="even">
+<td>Without steel quartz</td>
+<td>+0.28</td>
+<td>−0.28</td>
+<td>+0.66</td>
+<td>−0.09</td>
+</tr>
+<tr class="odd">
+<td>Mechanical only</td>
+<td>+0.31</td>
+<td>−0.28</td>
+<td>+0.67</td>
+<td>−0.08</td>
+</tr>
+</tbody>
+</table>
+<p>Without steel quartz the mix effect is gone, and it is slightly negative. Among all the other watches, exports moved a little down-market. Steel mechanical went from 44% to 52% of total value while precious-metal watches stayed at about 39%.</p>
+<p>The price term hardly changes. Unit values rose about as much with or without quartz, and they rose in every group between 2012 and 2025: precious mechanical from CHF 14,800 to 29,100, steel mechanical from 1,370 to 2,560, and steel quartz from 160 to 244.</p>
+<p>Most of the fall in volume is steel quartz. Switzerland exported 14.6 million fewer watches in 2025 than in 2012, and 12.8 million of those are steel quartz. All other watches together fell from 7.1 to 5.3 million.</p>
+<p>So the “richer” in the title needs a correction. Swiss exports did not move up-market because the top grew. They moved up-market because the bottom shrank.</p>
+</section>
+<section id="smartwatches-and-the-cheap-end" class="level2">
+<h2 class="anchored" data-anchor-id="smartwatches-and-the-cheap-end">Smartwatches and the cheap end</h2>
+<p>The obvious suspect for the bottom is the smartwatch. The Apple Watch went on sale in April 2015, and a CHF 200 quartz watch competes with it much more directly than a CHF 3,000 mechanical one does.</p>
+<p>I test this with a difference-in-differences on steel watches only, so the case material is the same on both sides. Quartz lines are the treated group and mechanical lines are the control. The unit of observation is a tariff line <span class="math inline">\(\ell\)</span>, a destination <span class="math inline">\(d\)</span> and a month <span class="math inline">\(t\)</span>:</p>
+<p><span class="math display">\[
+\ln q_{\ell d t} = \beta \, (\text{Quartz}_\ell \times \text{Post}_t) + \alpha_{\ell d} + \mu_{d t} + \varepsilon_{\ell d t}
+\]</span></p>
+<p>Here <span class="math inline">\(q\)</span> is pieces and Post equals one from May 2015 on. The line-by-country fixed effects <span class="math inline">\(\alpha_{\ell d}\)</span> absorb any permanent difference, such as quartz always selling better in a particular country. The country-by-month fixed effects <span class="math inline">\(\mu_{dt}\)</span> absorb anything that hits all steel watches in a country in a given month: a recession, a move in the franc, a tariff, COVID. What is left for <span class="math inline">\(\beta\)</span> is how much quartz fell relative to mechanical, in the same country and the same month, after 2015 compared with before. Standard errors are clustered by country, because shipments to the same country are not independent of each other.</p>
+<div class="cell">
+<div class="cell-output-display">
+<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_117sgsih6p54extakqhq = TinyTable.createTableFunctions("tinytable_117sgsih6p54extakqhq");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '9', j: 2 }, { i: '9', j: 3 }, { i: '9', j: 4 } ], css_id: 'tinytable_css_elj8ycxvj3aiikorrj1o',}, 
+          { positions: [ { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 } ], css_id: 'tinytable_css_oebupin0kc7iiv02tmpj',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '5', j: 4 }, { i: '6', j: 4 }, { i: '7', j: 4 }, { i: '8', j: 4 } ], css_id: 'tinytable_css_62blw5mcmqyxzm7asi27',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 } ], css_id: 'tinytable_css_mny5r92hspd2mgcdogat',}, 
+          { positions: [ { i: '9', j: 1 } ], css_id: 'tinytable_css_37jvjxfhohb476a766bk',}, 
+          { positions: [ { i: '4', j: 1 } ], css_id: 'tinytable_css_uqxcy7916ardxckwsf1e',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 } ], css_id: 'tinytable_css_771kvb0tlq8r27slf2xo',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_unm07o19c4k63dccew4a',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_117sgsih6p54extakqhq.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_117sgsih6p54extakqhq td.tinytable_css_elj8ycxvj3aiikorrj1o, #tinytable_117sgsih6p54extakqhq th.tinytable_css_elj8ycxvj3aiikorrj1o {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_117sgsih6p54extakqhq td.tinytable_css_oebupin0kc7iiv02tmpj, #tinytable_117sgsih6p54extakqhq th.tinytable_css_oebupin0kc7iiv02tmpj {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_117sgsih6p54extakqhq td.tinytable_css_62blw5mcmqyxzm7asi27, #tinytable_117sgsih6p54extakqhq th.tinytable_css_62blw5mcmqyxzm7asi27 { text-align: center }
+    #tinytable_117sgsih6p54extakqhq td.tinytable_css_mny5r92hspd2mgcdogat, #tinytable_117sgsih6p54extakqhq th.tinytable_css_mny5r92hspd2mgcdogat {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_117sgsih6p54extakqhq td.tinytable_css_37jvjxfhohb476a766bk, #tinytable_117sgsih6p54extakqhq th.tinytable_css_37jvjxfhohb476a766bk {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_117sgsih6p54extakqhq td.tinytable_css_uqxcy7916ardxckwsf1e, #tinytable_117sgsih6p54extakqhq th.tinytable_css_uqxcy7916ardxckwsf1e {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_117sgsih6p54extakqhq td.tinytable_css_771kvb0tlq8r27slf2xo, #tinytable_117sgsih6p54extakqhq th.tinytable_css_771kvb0tlq8r27slf2xo { text-align: left }
+    #tinytable_117sgsih6p54extakqhq td.tinytable_css_unm07o19c4k63dccew4a, #tinytable_117sgsih6p54extakqhq th.tinytable_css_unm07o19c4k63dccew4a {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_117sgsih6p54extakqhq" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <caption>Smartwatches and Swiss Quartz Exports: Difference-in-Differences</caption>
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">(1)</th>
+                <th scope="col" data-row="0" data-col="3">(2)</th>
+                <th scope="col" data-row="0" data-col="4">(3)</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="4">* p &lt; 0.1, ** p &lt; 0.05, *** p &lt; 0.01</td></tr>
+<tr><td colspan="4">Dependent variable: log pieces. Steel watches only: quartz (treated) vs mechanical (control).</td></tr>
+<tr><td colspan="4">22 countries, monthly 2000-2026. Standard errors clustered by country in parentheses.</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">Quartz × after Apple Watch (May 2015)</td>
+                  <td data-row="1" data-col="2">-1.368***</td>
+                  <td data-row="1" data-col="3">-1.311***</td>
+                  <td data-row="1" data-col="4">-0.534***</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2">(0.117)</td>
+                  <td data-row="2" data-col="3">(0.116)</td>
+                  <td data-row="2" data-col="4">(0.094)</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">Quartz × 12-month FX change</td>
+                  <td data-row="3" data-col="2"></td>
+                  <td data-row="3" data-col="3">0.248</td>
+                  <td data-row="3" data-col="4">-0.074</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2"></td>
+                  <td data-row="4" data-col="3">(0.295)</td>
+                  <td data-row="4" data-col="4">(0.345)</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">Line × country FE</td>
+                  <td data-row="5" data-col="2">Yes</td>
+                  <td data-row="5" data-col="3">Yes</td>
+                  <td data-row="5" data-col="4">Yes</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1">Country × month FE</td>
+                  <td data-row="6" data-col="2">Yes</td>
+                  <td data-row="6" data-col="3">Yes</td>
+                  <td data-row="6" data-col="4">Yes</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">Line-specific trends</td>
+                  <td data-row="7" data-col="2"></td>
+                  <td data-row="7" data-col="3"></td>
+                  <td data-row="7" data-col="4">Yes</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1">Observations</td>
+                  <td data-row="8" data-col="2">32680</td>
+                  <td data-row="8" data-col="3">31464</td>
+                  <td data-row="8" data-col="4">31464</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">Within R²</td>
+                  <td data-row="9" data-col="2">0.118</td>
+                  <td data-row="9" data-col="3">0.113</td>
+                  <td data-row="9" data-col="4">0.006</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+<p>The basic estimate is −1.37 log points, which is a 75% fall relative to mechanical. Column 2 lets quartz respond differently to the exchange rate, since the franc was unpegged in January 2015, three months before the launch. That hardly changes anything.</p>
+<p>Column 3 is the one to be careful with. Quartz was already losing ground to mechanical before 2015, so some of that 75% is a trend that would have continued anyway. Column 3 gives every tariff line its own linear time trend, and the estimate drops to −0.53, a 41% fall. That is probably too conservative in the other direction, because a trend fitted over the whole sample absorbs part of the post-2015 drop itself. I read the two numbers as a range: steel quartz volumes fell somewhere between 40% and 75% relative to mechanical.</p>
+<p>The event study replaces the single Post term with one coefficient per year, with 2014 as the base year.</p>
+<p>[FIGURE: smartwatch_event_study.png]</p>
+<p>Two things in it should be said plainly. The first is that the gap does not open in 2015. It is flat through 2016, then −0.47 in 2017, −0.84 in 2018 and −1.24 in 2019, and it has stayed between −1.3 and −1.6 since 2020. That is two years after the launch. It fits a product that took a couple of generations to catch on better than it fits an overnight shock, but it also means I can’t tie the drop to one date. The second is that the years before 2015 are not flat. Relative to mechanical, quartz was well above its 2014 level in 2000 to 2003 and again in 2012. That is the pre-trend column 3 is trying to deal with.</p>
+<p>In pieces, steel quartz exports went from 20.2 million in 2015 to 9.3 million in 2025. Steel mechanical fell too, from 7.4 to 4.9 million, which is why this is an estimate of the relative drop and not the total one.</p>
+</section>
+<section id="wealth-at-the-top" class="level2">
+<h2 class="anchored" data-anchor-id="wealth-at-the-top">Wealth at the top</h2>
+<p>Now the part of the status story I expected to hold. If Swiss watches are bought by the rich, then countries where the rich are pulling away should import more of them, and the effect should be strongest for the most expensive watches.</p>
+<p>I use an annual panel of destination <span class="math inline">\(d\)</span>, group <span class="math inline">\(k\)</span> and year <span class="math inline">\(t\)</span>, from 2000 to 2024:</p>
+<p><span class="math display">\[
+\ln X_{dkt} = \beta_k \ln \text{Top1}_{dt} + \gamma_k' Z_{dt} + \alpha_{dk} + \mu_{kt} + \varepsilon_{dkt}
+\]</span></p>
+<p><span class="math inline">\(X\)</span> is export value. Top1 is the share of national income going to the top 1%. <span class="math inline">\(Z\)</span> holds GDP per capita, total GDP, the real exchange rate and, in the last column, the stock index. Every slope is allowed to differ across the four groups. The country-by-group fixed effects mean I only use changes within a country over time, so it doesn’t matter that some countries are both richer and keener on watches than others. The group-by-year fixed effects take out anything that hits a group everywhere in a given year, which includes the smartwatch effect on quartz.</p>
+<div class="cell">
+<div class="cell-output-display">
+<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_h3gy91vg5ln9vhdkiuvq = TinyTable.createTableFunctions("tinytable_h3gy91vg5ln9vhdkiuvq");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '24', j: 2 }, { i: '24', j: 3 }, { i: '24', j: 4 }, { i: '24', j: 5 } ], css_id: 'tinytable_css_nktp5s8axtrfoibdc8ov',}, 
+          { positions: [ { i: '18', j: 2 }, { i: '18', j: 3 }, { i: '18', j: 4 }, { i: '18', j: 5 } ], css_id: 'tinytable_css_cty1vbb8nq79eskgtogq',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 }, { i: '16', j: 2 }, { i: '17', j: 2 }, { i: '19', j: 2 }, { i: '20', j: 2 }, { i: '21', j: 2 }, { i: '22', j: 2 }, { i: '23', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 }, { i: '13', j: 3 }, { i: '14', j: 3 }, { i: '15', j: 3 }, { i: '16', j: 3 }, { i: '17', j: 3 }, { i: '19', j: 3 }, { i: '20', j: 3 }, { i: '21', j: 3 }, { i: '22', j: 3 }, { i: '23', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '5', j: 4 }, { i: '6', j: 4 }, { i: '7', j: 4 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '10', j: 4 }, { i: '11', j: 4 }, { i: '12', j: 4 }, { i: '13', j: 4 }, { i: '14', j: 4 }, { i: '15', j: 4 }, { i: '16', j: 4 }, { i: '17', j: 4 }, { i: '19', j: 4 }, { i: '20', j: 4 }, { i: '21', j: 4 }, { i: '22', j: 4 }, { i: '23', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '3', j: 5 }, { i: '4', j: 5 }, { i: '5', j: 5 }, { i: '6', j: 5 }, { i: '7', j: 5 }, { i: '8', j: 5 }, { i: '9', j: 5 }, { i: '10', j: 5 }, { i: '11', j: 5 }, { i: '12', j: 5 }, { i: '13', j: 5 }, { i: '14', j: 5 }, { i: '15', j: 5 }, { i: '16', j: 5 }, { i: '17', j: 5 }, { i: '19', j: 5 }, { i: '20', j: 5 }, { i: '21', j: 5 }, { i: '22', j: 5 }, { i: '23', j: 5 } ], css_id: 'tinytable_css_622d0d4p2u4xz3lft686',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_0z5sr72nkqri20o7ug9d',}, 
+          { positions: [ { i: '24', j: 1 } ], css_id: 'tinytable_css_hjudwu9fk6lefmxnappo',}, 
+          { positions: [ { i: '18', j: 1 } ], css_id: 'tinytable_css_bdrmij6hkxmfkjbgkoua',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 }, { i: '16', j: 1 }, { i: '17', j: 1 }, { i: '19', j: 1 }, { i: '20', j: 1 }, { i: '21', j: 1 }, { i: '22', j: 1 }, { i: '23', j: 1 } ], css_id: 'tinytable_css_g33h4ndwrmde45q4ie8n',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_dr84dhuift74npootfd5',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_h3gy91vg5ln9vhdkiuvq.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_h3gy91vg5ln9vhdkiuvq td.tinytable_css_nktp5s8axtrfoibdc8ov, #tinytable_h3gy91vg5ln9vhdkiuvq th.tinytable_css_nktp5s8axtrfoibdc8ov {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_h3gy91vg5ln9vhdkiuvq td.tinytable_css_cty1vbb8nq79eskgtogq, #tinytable_h3gy91vg5ln9vhdkiuvq th.tinytable_css_cty1vbb8nq79eskgtogq {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_h3gy91vg5ln9vhdkiuvq td.tinytable_css_622d0d4p2u4xz3lft686, #tinytable_h3gy91vg5ln9vhdkiuvq th.tinytable_css_622d0d4p2u4xz3lft686 { text-align: center }
+    #tinytable_h3gy91vg5ln9vhdkiuvq td.tinytable_css_0z5sr72nkqri20o7ug9d, #tinytable_h3gy91vg5ln9vhdkiuvq th.tinytable_css_0z5sr72nkqri20o7ug9d {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_h3gy91vg5ln9vhdkiuvq td.tinytable_css_hjudwu9fk6lefmxnappo, #tinytable_h3gy91vg5ln9vhdkiuvq th.tinytable_css_hjudwu9fk6lefmxnappo {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_h3gy91vg5ln9vhdkiuvq td.tinytable_css_bdrmij6hkxmfkjbgkoua, #tinytable_h3gy91vg5ln9vhdkiuvq th.tinytable_css_bdrmij6hkxmfkjbgkoua {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_h3gy91vg5ln9vhdkiuvq td.tinytable_css_g33h4ndwrmde45q4ie8n, #tinytable_h3gy91vg5ln9vhdkiuvq th.tinytable_css_g33h4ndwrmde45q4ie8n { text-align: left }
+    #tinytable_h3gy91vg5ln9vhdkiuvq td.tinytable_css_dr84dhuift74npootfd5, #tinytable_h3gy91vg5ln9vhdkiuvq th.tinytable_css_dr84dhuift74npootfd5 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_h3gy91vg5ln9vhdkiuvq" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <caption>Top 1% Income Share, Stock Markets and Swiss Watch Exports, Annual</caption>
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">(1)</th>
+                <th scope="col" data-row="0" data-col="3">(2)</th>
+                <th scope="col" data-row="0" data-col="4">(3)</th>
+                <th scope="col" data-row="0" data-col="5">(4)</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="5">* p &lt; 0.1, ** p &lt; 0.05, *** p &lt; 0.01</td></tr>
+<tr><td colspan="5">Dependent variable: log export value. All variables in logs, so coefficients are elasticities.</td></tr>
+<tr><td colspan="5">Column 4 adds equity, which limits the sample to the 15 countries with a stock index. Standard errors clustered by country in parentheses.</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">Top 1% share (all tiers)</td>
+                  <td data-row="1" data-col="2">1.533*</td>
+                  <td data-row="1" data-col="3"></td>
+                  <td data-row="1" data-col="4"></td>
+                  <td data-row="1" data-col="5"></td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2">(0.767)</td>
+                  <td data-row="2" data-col="3"></td>
+                  <td data-row="2" data-col="4"></td>
+                  <td data-row="2" data-col="5"></td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">Top 1% × precious mechanical</td>
+                  <td data-row="3" data-col="2"></td>
+                  <td data-row="3" data-col="3">1.344</td>
+                  <td data-row="3" data-col="4">0.751</td>
+                  <td data-row="3" data-col="5">0.833</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2"></td>
+                  <td data-row="4" data-col="3">(0.850)</td>
+                  <td data-row="4" data-col="4">(0.497)</td>
+                  <td data-row="4" data-col="5">(0.665)</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">Top 1% × precious quartz</td>
+                  <td data-row="5" data-col="2"></td>
+                  <td data-row="5" data-col="3">1.685*</td>
+                  <td data-row="5" data-col="4">0.984**</td>
+                  <td data-row="5" data-col="5">0.815*</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2"></td>
+                  <td data-row="6" data-col="3">(0.823)</td>
+                  <td data-row="6" data-col="4">(0.427)</td>
+                  <td data-row="6" data-col="5">(0.421)</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">Top 1% × steel mechanical</td>
+                  <td data-row="7" data-col="2"></td>
+                  <td data-row="7" data-col="3">1.841*</td>
+                  <td data-row="7" data-col="4">1.479**</td>
+                  <td data-row="7" data-col="5">1.775*</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1"></td>
+                  <td data-row="8" data-col="2"></td>
+                  <td data-row="8" data-col="3">(0.953)</td>
+                  <td data-row="8" data-col="4">(0.697)</td>
+                  <td data-row="8" data-col="5">(0.842)</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">Top 1% × steel quartz</td>
+                  <td data-row="9" data-col="2"></td>
+                  <td data-row="9" data-col="3">1.263**</td>
+                  <td data-row="9" data-col="4">0.909***</td>
+                  <td data-row="9" data-col="5">0.811**</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1"></td>
+                  <td data-row="10" data-col="2"></td>
+                  <td data-row="10" data-col="3">(0.580)</td>
+                  <td data-row="10" data-col="4">(0.256)</td>
+                  <td data-row="10" data-col="5">(0.312)</td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">Equity × precious mechanical</td>
+                  <td data-row="11" data-col="2"></td>
+                  <td data-row="11" data-col="3"></td>
+                  <td data-row="11" data-col="4"></td>
+                  <td data-row="11" data-col="5">0.250</td>
+                </tr>
+                <tr>
+                  <td data-row="12" data-col="1"></td>
+                  <td data-row="12" data-col="2"></td>
+                  <td data-row="12" data-col="3"></td>
+                  <td data-row="12" data-col="4"></td>
+                  <td data-row="12" data-col="5">(0.280)</td>
+                </tr>
+                <tr>
+                  <td data-row="13" data-col="1">Equity × precious quartz</td>
+                  <td data-row="13" data-col="2"></td>
+                  <td data-row="13" data-col="3"></td>
+                  <td data-row="13" data-col="4"></td>
+                  <td data-row="13" data-col="5">0.162</td>
+                </tr>
+                <tr>
+                  <td data-row="14" data-col="1"></td>
+                  <td data-row="14" data-col="2"></td>
+                  <td data-row="14" data-col="3"></td>
+                  <td data-row="14" data-col="4"></td>
+                  <td data-row="14" data-col="5">(0.325)</td>
+                </tr>
+                <tr>
+                  <td data-row="15" data-col="1">Equity × steel mechanical</td>
+                  <td data-row="15" data-col="2"></td>
+                  <td data-row="15" data-col="3"></td>
+                  <td data-row="15" data-col="4"></td>
+                  <td data-row="15" data-col="5">0.350</td>
+                </tr>
+                <tr>
+                  <td data-row="16" data-col="1"></td>
+                  <td data-row="16" data-col="2"></td>
+                  <td data-row="16" data-col="3"></td>
+                  <td data-row="16" data-col="4"></td>
+                  <td data-row="16" data-col="5">(0.297)</td>
+                </tr>
+                <tr>
+                  <td data-row="17" data-col="1">Equity × steel quartz</td>
+                  <td data-row="17" data-col="2"></td>
+                  <td data-row="17" data-col="3"></td>
+                  <td data-row="17" data-col="4"></td>
+                  <td data-row="17" data-col="5">0.226</td>
+                </tr>
+                <tr>
+                  <td data-row="18" data-col="1"></td>
+                  <td data-row="18" data-col="2"></td>
+                  <td data-row="18" data-col="3"></td>
+                  <td data-row="18" data-col="4"></td>
+                  <td data-row="18" data-col="5">(0.183)</td>
+                </tr>
+                <tr>
+                  <td data-row="19" data-col="1">GDP per capita, total GDP, RER</td>
+                  <td data-row="19" data-col="2"></td>
+                  <td data-row="19" data-col="3"></td>
+                  <td data-row="19" data-col="4">Yes</td>
+                  <td data-row="19" data-col="5">Yes</td>
+                </tr>
+                <tr>
+                  <td data-row="20" data-col="1">Country × tier FE</td>
+                  <td data-row="20" data-col="2">Yes</td>
+                  <td data-row="20" data-col="3">Yes</td>
+                  <td data-row="20" data-col="4">Yes</td>
+                  <td data-row="20" data-col="5">Yes</td>
+                </tr>
+                <tr>
+                  <td data-row="21" data-col="1">Tier × year FE</td>
+                  <td data-row="21" data-col="2">Yes</td>
+                  <td data-row="21" data-col="3">Yes</td>
+                  <td data-row="21" data-col="4">Yes</td>
+                  <td data-row="21" data-col="5">Yes</td>
+                </tr>
+                <tr>
+                  <td data-row="22" data-col="1">Observations</td>
+                  <td data-row="22" data-col="2">2200</td>
+                  <td data-row="22" data-col="3">2200</td>
+                  <td data-row="22" data-col="4">2172</td>
+                  <td data-row="22" data-col="5">1444</td>
+                </tr>
+                <tr>
+                  <td data-row="23" data-col="1">Within R²</td>
+                  <td data-row="23" data-col="2">0.076</td>
+                  <td data-row="23" data-col="3">0.078</td>
+                  <td data-row="23" data-col="4">0.456</td>
+                  <td data-row="23" data-col="5">0.564</td>
+                </tr>
+                <tr>
+                  <td data-row="24" data-col="1">Within R² (adjusted)</td>
+                  <td data-row="24" data-col="2">0.076</td>
+                  <td data-row="24" data-col="3">0.076</td>
+                  <td data-row="24" data-col="4">0.452</td>
+                  <td data-row="24" data-col="5">0.557</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+<p>Since everything is in logs, the coefficients are elasticities. In column 4, a 1% rise in the top 1% share goes with 0.83% more precious mechanical imports, 0.82% more precious quartz, 0.81% more steel quartz and 1.78% more steel mechanical.</p>
+<p>The stars are misleading if you read them one row at a time. Steel quartz is significant at 5% and precious mechanical is not significant at all, so it is tempting to say the effect lives at the cheap end. But the two estimates are 0.81 and 0.83. What differs is the standard error, 0.31 against 0.67, because steel quartz has far more shipments and a steadier series. When I test the differences directly, none is close to significant. The gaps from steel quartz are 0.02, 0.00 and 0.96, with standard errors of 0.58, 0.26 and 0.72.</p>
+<p>So top-end income seems to raise demand for Swiss watches across the board, with no premium for the expensive groups. That is not what the status story predicts.</p>
+<p>Three checks, with the tables in the appendix:</p>
+<ul>
+<li>Splitting value into pieces and unit value, the effect comes through pieces. Countries where the top share rises import more watches, not pricier ones.</li>
+<li>Dropping Hong Kong, Singapore and the UAE, which re-export much of what they import, shrinks every estimate and leaves only steel mechanical significant, at the 10% level.</li>
+<li>Stock markets add little in the annual data. In monthly data, a 12-month rise in the stock market predicts export growth for the two quartz groups, with an elasticity of about 0.14. Once I add country-by-year fixed effects, none of the four groups is distinguishable from zero.</li>
+</ul>
+<p>I hold all of this loosely. Top income shares move slowly. A typical country’s share varies by only about 8% around its own average over the 25 years. The quality of the underlying data varies a lot by country. And there are 22 countries, 15 once I need a stock index. What I’m fairly confident about is that there is no gradient across the groups. I’m much less confident about the size of the effect.</p>
+</section>
+<section id="gold" class="level2">
+<h2 class="anchored" data-anchor-id="gold">Gold</h2>
+<p>The last piece of the story is cost. Gold averaged CHF 471 an ounce in 2000 and CHF 2,844 in 2025. If precious-metal watches got more expensive because gold did, changes in the gold price should show up in their unit values over the following months, and more than they do in steel watches.</p>
+<p>The regression uses monthly changes in log unit value by tariff line and country. On the right-hand side are the current and twelve lagged monthly changes in the franc gold price, each interacted with a precious-metal dummy, plus exchange-rate changes, line-by-country fixed effects and month fixed effects, weighted by pieces. Because of the month fixed effects, the coefficients measure the extra response of precious-metal watches relative to steel.</p>
+<p>[FIGURE: gold_passthrough.png]</p>
+<p>Cumulative pass-through is 0.01 in the same month, 0.10 after three months, 0.27 after six and 0.06 after twelve, with standard errors of 0.12 to 0.17. None of these is distinguishable from zero.</p>
+<p>The levels say the same thing more simply. From 2012 to 2025 gold rose 82%. Precious mechanical unit values rose 97%. Steel mechanical unit values, with no gold in the case, rose 87%.</p>
+<p>A null in monthly changes doesn’t rule out slow pass-through over several years, since brands don’t reprice every month. But steel watches rising almost as much as gold ones makes cost an unlikely main driver.</p>
+</section>
+<section id="what-i-think-is-going-on" class="level2">
+<h2 class="anchored" data-anchor-id="what-i-think-is-going-on">What I think is going on</h2>
+<p>Putting the pieces together:</p>
+<ul>
+<li><strong>Fewer.</strong> Almost all of the fall in pieces is cheap steel quartz. The comparison with steel mechanical and the timing both point to smartwatches, though the drop starts in 2017 and not at the 2015 launch.</li>
+<li><strong>Pricier.</strong> Unit values roughly doubled within every category since 2012, far ahead of inflation, and the pace picked up after 2019. Gold doesn’t explain it.</li>
+<li><strong>Richer.</strong> The shift toward expensive watches is the bottom shrinking. Rising top incomes go with more watch imports, but about equally for cheap and expensive watches.</li>
+</ul>
+<p>With gold and a top-heavy shift in demand set aside, what’s left to explain the price increase is the industry itself: brands raising prices and moving their ranges up. I should be clear that I get there by elimination. Nothing in my data shows it directly.</p>
+<p>There are also things this data can’t see. It can’t tell a price increase from a better watch, because unit value moves with both. It records where a watch is shipped, not who ends up buying it, which matters for hubs like Hong Kong and for tourists. And it stops at the Swiss border, so it has nothing on retail prices or the second-hand market. Model-level price data would settle the first of these, and that is where I would go next.</p>
+</section>
+<section id="appendix" class="level2">
+<h2 class="anchored" data-anchor-id="appendix">Appendix</h2>
+<div class="cell">
+<div class="cell-output-display">
+<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_ylla5pssr7da2e4ihxn2 = TinyTable.createTableFunctions("tinytable_ylla5pssr7da2e4ihxn2");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '12', j: 2 } ], css_id: 'tinytable_css_q0g891hlmtpr5394pukd',}, 
+          { positions: [ { i: '8', j: 2 } ], css_id: 'tinytable_css_ak16ubhtp8sk7ao67mtz',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 } ], css_id: 'tinytable_css_z4qafaal2e8hx14r2mvr',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_uoyjpij1t7hq1wqy2zd6',}, 
+          { positions: [ { i: '12', j: 1 } ], css_id: 'tinytable_css_u0ot4ogsefwr5xfmo8aq',}, 
+          { positions: [ { i: '8', j: 1 } ], css_id: 'tinytable_css_wc9k2kt5peffuavz0d7b',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 } ], css_id: 'tinytable_css_lqhb64dagde447m9xhzy',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_wt2sumbq7onj10m6j98c',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_ylla5pssr7da2e4ihxn2.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_ylla5pssr7da2e4ihxn2 td.tinytable_css_q0g891hlmtpr5394pukd, #tinytable_ylla5pssr7da2e4ihxn2 th.tinytable_css_q0g891hlmtpr5394pukd {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_ylla5pssr7da2e4ihxn2 td.tinytable_css_ak16ubhtp8sk7ao67mtz, #tinytable_ylla5pssr7da2e4ihxn2 th.tinytable_css_ak16ubhtp8sk7ao67mtz {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_ylla5pssr7da2e4ihxn2 td.tinytable_css_z4qafaal2e8hx14r2mvr, #tinytable_ylla5pssr7da2e4ihxn2 th.tinytable_css_z4qafaal2e8hx14r2mvr { text-align: center }
+    #tinytable_ylla5pssr7da2e4ihxn2 td.tinytable_css_uoyjpij1t7hq1wqy2zd6, #tinytable_ylla5pssr7da2e4ihxn2 th.tinytable_css_uoyjpij1t7hq1wqy2zd6 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_ylla5pssr7da2e4ihxn2 td.tinytable_css_u0ot4ogsefwr5xfmo8aq, #tinytable_ylla5pssr7da2e4ihxn2 th.tinytable_css_u0ot4ogsefwr5xfmo8aq {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_ylla5pssr7da2e4ihxn2 td.tinytable_css_wc9k2kt5peffuavz0d7b, #tinytable_ylla5pssr7da2e4ihxn2 th.tinytable_css_wc9k2kt5peffuavz0d7b {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_ylla5pssr7da2e4ihxn2 td.tinytable_css_lqhb64dagde447m9xhzy, #tinytable_ylla5pssr7da2e4ihxn2 th.tinytable_css_lqhb64dagde447m9xhzy { text-align: left }
+    #tinytable_ylla5pssr7da2e4ihxn2 td.tinytable_css_wt2sumbq7onj10m6j98c, #tinytable_ylla5pssr7da2e4ihxn2 th.tinytable_css_wt2sumbq7onj10m6j98c {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_ylla5pssr7da2e4ihxn2" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <caption>Does the Top 1% Effect Differ by Tier?</caption>
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">(1)</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="2">* p &lt; 0.1, ** p &lt; 0.05, *** p &lt; 0.01</td></tr>
+<tr><td colspan="2">Top 1% income share slope for steel quartz, and how much each other tier's slope differs from it. Dependent variable: log export value.</td></tr>
+<tr><td colspan="2">15 countries. Standard errors clustered by country in parentheses.</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">Steel quartz slope (base)</td>
+                  <td data-row="1" data-col="2">0.811**</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2">(0.312)</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">Precious mechanical minus steel quartz</td>
+                  <td data-row="3" data-col="2">0.022</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2">(0.583)</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">Precious quartz minus steel quartz</td>
+                  <td data-row="5" data-col="2">0.004</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2">(0.261)</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">Steel mechanical minus steel quartz</td>
+                  <td data-row="7" data-col="2">0.964</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1"></td>
+                  <td data-row="8" data-col="2">(0.724)</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">GDP per capita, total GDP, RER, equity</td>
+                  <td data-row="9" data-col="2">Yes</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1">Country × tier FE</td>
+                  <td data-row="10" data-col="2">Yes</td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">Tier × year FE</td>
+                  <td data-row="11" data-col="2">Yes</td>
+                </tr>
+                <tr>
+                  <td data-row="12" data-col="1">Observations</td>
+                  <td data-row="12" data-col="2">1444</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_71s0xdddpk6vtf3ybxbb = TinyTable.createTableFunctions("tinytable_71s0xdddpk6vtf3ybxbb");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '23', j: 2 }, { i: '23', j: 3 }, { i: '23', j: 4 }, { i: '23', j: 5 } ], css_id: 'tinytable_css_ueqwpyozufcybq00bnwr',}, 
+          { positions: [ { i: '18', j: 2 }, { i: '18', j: 3 }, { i: '18', j: 4 }, { i: '18', j: 5 } ], css_id: 'tinytable_css_q6lwaoecriuz24bew6sp',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 }, { i: '16', j: 2 }, { i: '17', j: 2 }, { i: '19', j: 2 }, { i: '20', j: 2 }, { i: '21', j: 2 }, { i: '22', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '8', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 }, { i: '13', j: 3 }, { i: '14', j: 3 }, { i: '15', j: 3 }, { i: '16', j: 3 }, { i: '17', j: 3 }, { i: '19', j: 3 }, { i: '20', j: 3 }, { i: '21', j: 3 }, { i: '22', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '4', j: 4 }, { i: '5', j: 4 }, { i: '6', j: 4 }, { i: '7', j: 4 }, { i: '8', j: 4 }, { i: '9', j: 4 }, { i: '10', j: 4 }, { i: '11', j: 4 }, { i: '12', j: 4 }, { i: '13', j: 4 }, { i: '14', j: 4 }, { i: '15', j: 4 }, { i: '16', j: 4 }, { i: '17', j: 4 }, { i: '19', j: 4 }, { i: '20', j: 4 }, { i: '21', j: 4 }, { i: '22', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 }, { i: '3', j: 5 }, { i: '4', j: 5 }, { i: '5', j: 5 }, { i: '6', j: 5 }, { i: '7', j: 5 }, { i: '8', j: 5 }, { i: '9', j: 5 }, { i: '10', j: 5 }, { i: '11', j: 5 }, { i: '12', j: 5 }, { i: '13', j: 5 }, { i: '14', j: 5 }, { i: '15', j: 5 }, { i: '16', j: 5 }, { i: '17', j: 5 }, { i: '19', j: 5 }, { i: '20', j: 5 }, { i: '21', j: 5 }, { i: '22', j: 5 } ], css_id: 'tinytable_css_5z1tnjf92iyhe2fupqt9',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_h3zq5pmtsedowv19o3ix',}, 
+          { positions: [ { i: '23', j: 1 } ], css_id: 'tinytable_css_jwnyc8m0tirby74o0ry1',}, 
+          { positions: [ { i: '18', j: 1 } ], css_id: 'tinytable_css_d8xppt2ke6azb88s3dls',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 }, { i: '16', j: 1 }, { i: '17', j: 1 }, { i: '19', j: 1 }, { i: '20', j: 1 }, { i: '21', j: 1 }, { i: '22', j: 1 } ], css_id: 'tinytable_css_s6cc7ux91vckxx5wnmhj',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_ydte3djpw2kyylx3q5r5',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_71s0xdddpk6vtf3ybxbb.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_71s0xdddpk6vtf3ybxbb td.tinytable_css_ueqwpyozufcybq00bnwr, #tinytable_71s0xdddpk6vtf3ybxbb th.tinytable_css_ueqwpyozufcybq00bnwr {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_71s0xdddpk6vtf3ybxbb td.tinytable_css_q6lwaoecriuz24bew6sp, #tinytable_71s0xdddpk6vtf3ybxbb th.tinytable_css_q6lwaoecriuz24bew6sp {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_71s0xdddpk6vtf3ybxbb td.tinytable_css_5z1tnjf92iyhe2fupqt9, #tinytable_71s0xdddpk6vtf3ybxbb th.tinytable_css_5z1tnjf92iyhe2fupqt9 { text-align: center }
+    #tinytable_71s0xdddpk6vtf3ybxbb td.tinytable_css_h3zq5pmtsedowv19o3ix, #tinytable_71s0xdddpk6vtf3ybxbb th.tinytable_css_h3zq5pmtsedowv19o3ix {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_71s0xdddpk6vtf3ybxbb td.tinytable_css_jwnyc8m0tirby74o0ry1, #tinytable_71s0xdddpk6vtf3ybxbb th.tinytable_css_jwnyc8m0tirby74o0ry1 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_71s0xdddpk6vtf3ybxbb td.tinytable_css_d8xppt2ke6azb88s3dls, #tinytable_71s0xdddpk6vtf3ybxbb th.tinytable_css_d8xppt2ke6azb88s3dls {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_71s0xdddpk6vtf3ybxbb td.tinytable_css_s6cc7ux91vckxx5wnmhj, #tinytable_71s0xdddpk6vtf3ybxbb th.tinytable_css_s6cc7ux91vckxx5wnmhj { text-align: left }
+    #tinytable_71s0xdddpk6vtf3ybxbb td.tinytable_css_ydte3djpw2kyylx3q5r5, #tinytable_71s0xdddpk6vtf3ybxbb th.tinytable_css_ydte3djpw2kyylx3q5r5 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_71s0xdddpk6vtf3ybxbb" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <caption>Wealth Regression Robustness: Dropping Hubs and Splitting Value into Units and Price</caption>
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">(1)</th>
+                <th scope="col" data-row="0" data-col="3">(2)</th>
+                <th scope="col" data-row="0" data-col="4">(3)</th>
+                <th scope="col" data-row="0" data-col="5">(4)</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="5">* p &lt; 0.1, ** p &lt; 0.05, *** p &lt; 0.01</td></tr>
+<tr><td colspan="5">All variables in logs. Column 2 drops the re-export hubs. Columns 3 and 4 add up to column 1.</td></tr>
+<tr><td colspan="5">Standard errors clustered by country in parentheses.</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">Dependent variable (log)</td>
+                  <td data-row="1" data-col="2">Value</td>
+                  <td data-row="1" data-col="3">Value</td>
+                  <td data-row="1" data-col="4">Units</td>
+                  <td data-row="1" data-col="5">Unit value</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1">Sample</td>
+                  <td data-row="2" data-col="2">All 15</td>
+                  <td data-row="2" data-col="3">No HK, SG, AE</td>
+                  <td data-row="2" data-col="4">All 15</td>
+                  <td data-row="2" data-col="5">All 15</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">Top 1% × precious mechanical</td>
+                  <td data-row="3" data-col="2">0.833</td>
+                  <td data-row="3" data-col="3">0.492</td>
+                  <td data-row="3" data-col="4">1.019</td>
+                  <td data-row="3" data-col="5">-0.187</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2">(0.665)</td>
+                  <td data-row="4" data-col="3">(0.527)</td>
+                  <td data-row="4" data-col="4">(0.744)</td>
+                  <td data-row="4" data-col="5">(0.115)</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">Top 1% × precious quartz</td>
+                  <td data-row="5" data-col="2">0.815*</td>
+                  <td data-row="5" data-col="3">0.496</td>
+                  <td data-row="5" data-col="4">1.224***</td>
+                  <td data-row="5" data-col="5">-0.410</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2">(0.421)</td>
+                  <td data-row="6" data-col="3">(0.402)</td>
+                  <td data-row="6" data-col="4">(0.407)</td>
+                  <td data-row="6" data-col="5">(0.280)</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">Top 1% × steel mechanical</td>
+                  <td data-row="7" data-col="2">1.775*</td>
+                  <td data-row="7" data-col="3">1.372*</td>
+                  <td data-row="7" data-col="4">1.572**</td>
+                  <td data-row="7" data-col="5">0.204</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1"></td>
+                  <td data-row="8" data-col="2">(0.842)</td>
+                  <td data-row="8" data-col="3">(0.708)</td>
+                  <td data-row="8" data-col="4">(0.604)</td>
+                  <td data-row="8" data-col="5">(0.309)</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">Top 1% × steel quartz</td>
+                  <td data-row="9" data-col="2">0.811**</td>
+                  <td data-row="9" data-col="3">0.578</td>
+                  <td data-row="9" data-col="4">0.550*</td>
+                  <td data-row="9" data-col="5">0.261</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1"></td>
+                  <td data-row="10" data-col="2">(0.312)</td>
+                  <td data-row="10" data-col="3">(0.339)</td>
+                  <td data-row="10" data-col="4">(0.258)</td>
+                  <td data-row="10" data-col="5">(0.198)</td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">Equity × precious mechanical</td>
+                  <td data-row="11" data-col="2">0.250</td>
+                  <td data-row="11" data-col="3">0.194</td>
+                  <td data-row="11" data-col="4">0.476</td>
+                  <td data-row="11" data-col="5">-0.226**</td>
+                </tr>
+                <tr>
+                  <td data-row="12" data-col="1"></td>
+                  <td data-row="12" data-col="2">(0.280)</td>
+                  <td data-row="12" data-col="3">(0.243)</td>
+                  <td data-row="12" data-col="4">(0.288)</td>
+                  <td data-row="12" data-col="5">(0.077)</td>
+                </tr>
+                <tr>
+                  <td data-row="13" data-col="1">Equity × precious quartz</td>
+                  <td data-row="13" data-col="2">0.162</td>
+                  <td data-row="13" data-col="3">0.137</td>
+                  <td data-row="13" data-col="4">0.133</td>
+                  <td data-row="13" data-col="5">0.030</td>
+                </tr>
+                <tr>
+                  <td data-row="14" data-col="1"></td>
+                  <td data-row="14" data-col="2">(0.325)</td>
+                  <td data-row="14" data-col="3">(0.394)</td>
+                  <td data-row="14" data-col="4">(0.232)</td>
+                  <td data-row="14" data-col="5">(0.169)</td>
+                </tr>
+                <tr>
+                  <td data-row="15" data-col="1">Equity × steel mechanical</td>
+                  <td data-row="15" data-col="2">0.350</td>
+                  <td data-row="15" data-col="3">0.348</td>
+                  <td data-row="15" data-col="4">0.510**</td>
+                  <td data-row="15" data-col="5">-0.161</td>
+                </tr>
+                <tr>
+                  <td data-row="16" data-col="1"></td>
+                  <td data-row="16" data-col="2">(0.297)</td>
+                  <td data-row="16" data-col="3">(0.235)</td>
+                  <td data-row="16" data-col="4">(0.229)</td>
+                  <td data-row="16" data-col="5">(0.098)</td>
+                </tr>
+                <tr>
+                  <td data-row="17" data-col="1">Equity × steel quartz</td>
+                  <td data-row="17" data-col="2">0.226</td>
+                  <td data-row="17" data-col="3">0.248</td>
+                  <td data-row="17" data-col="4">0.170</td>
+                  <td data-row="17" data-col="5">0.056</td>
+                </tr>
+                <tr>
+                  <td data-row="18" data-col="1"></td>
+                  <td data-row="18" data-col="2">(0.183)</td>
+                  <td data-row="18" data-col="3">(0.199)</td>
+                  <td data-row="18" data-col="4">(0.128)</td>
+                  <td data-row="18" data-col="5">(0.175)</td>
+                </tr>
+                <tr>
+                  <td data-row="19" data-col="1">GDP per capita, total GDP, RER</td>
+                  <td data-row="19" data-col="2">Yes</td>
+                  <td data-row="19" data-col="3">Yes</td>
+                  <td data-row="19" data-col="4">Yes</td>
+                  <td data-row="19" data-col="5">Yes</td>
+                </tr>
+                <tr>
+                  <td data-row="20" data-col="1">Country × tier FE</td>
+                  <td data-row="20" data-col="2">Yes</td>
+                  <td data-row="20" data-col="3">Yes</td>
+                  <td data-row="20" data-col="4">Yes</td>
+                  <td data-row="20" data-col="5">Yes</td>
+                </tr>
+                <tr>
+                  <td data-row="21" data-col="1">Tier × year FE</td>
+                  <td data-row="21" data-col="2">Yes</td>
+                  <td data-row="21" data-col="3">Yes</td>
+                  <td data-row="21" data-col="4">Yes</td>
+                  <td data-row="21" data-col="5">Yes</td>
+                </tr>
+                <tr>
+                  <td data-row="22" data-col="1">Observations</td>
+                  <td data-row="22" data-col="2">1444</td>
+                  <td data-row="22" data-col="3">1200</td>
+                  <td data-row="22" data-col="4">1444</td>
+                  <td data-row="22" data-col="5">1444</td>
+                </tr>
+                <tr>
+                  <td data-row="23" data-col="1">Within R²</td>
+                  <td data-row="23" data-col="2">0.564</td>
+                  <td data-row="23" data-col="3">0.642</td>
+                  <td data-row="23" data-col="4">0.582</td>
+                  <td data-row="23" data-col="5">0.132</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_vl53csdfjvera7takj37 = TinyTable.createTableFunctions("tinytable_vl53csdfjvera7takj37");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '14', j: 2 }, { i: '14', j: 3 } ], css_id: 'tinytable_css_boztmqnufr1jihjs47bh',}, 
+          { positions: [ { i: '8', j: 2 }, { i: '8', j: 3 } ], css_id: 'tinytable_css_b4zeryprxn7ffrgkuq41',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '4', j: 3 }, { i: '5', j: 3 }, { i: '6', j: 3 }, { i: '7', j: 3 }, { i: '9', j: 3 }, { i: '10', j: 3 }, { i: '11', j: 3 }, { i: '12', j: 3 }, { i: '13', j: 3 } ], css_id: 'tinytable_css_zlxppdhuuk5a892t330h',}, 
+          { positions: [ { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_s40dkxfkm798bwizwukx',}, 
+          { positions: [ { i: '14', j: 1 } ], css_id: 'tinytable_css_ux4jc6u3f7zhi75nc650',}, 
+          { positions: [ { i: '8', j: 1 } ], css_id: 'tinytable_css_w1iem6edjedui4wi4br7',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 } ], css_id: 'tinytable_css_vh2cwaxf3wrzr2wljg4d',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_sham2bwu5jt6uk65onq3',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_vl53csdfjvera7takj37.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_vl53csdfjvera7takj37 td.tinytable_css_boztmqnufr1jihjs47bh, #tinytable_vl53csdfjvera7takj37 th.tinytable_css_boztmqnufr1jihjs47bh {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_vl53csdfjvera7takj37 td.tinytable_css_b4zeryprxn7ffrgkuq41, #tinytable_vl53csdfjvera7takj37 th.tinytable_css_b4zeryprxn7ffrgkuq41 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_vl53csdfjvera7takj37 td.tinytable_css_zlxppdhuuk5a892t330h, #tinytable_vl53csdfjvera7takj37 th.tinytable_css_zlxppdhuuk5a892t330h { text-align: center }
+    #tinytable_vl53csdfjvera7takj37 td.tinytable_css_s40dkxfkm798bwizwukx, #tinytable_vl53csdfjvera7takj37 th.tinytable_css_s40dkxfkm798bwizwukx {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_vl53csdfjvera7takj37 td.tinytable_css_ux4jc6u3f7zhi75nc650, #tinytable_vl53csdfjvera7takj37 th.tinytable_css_ux4jc6u3f7zhi75nc650 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_vl53csdfjvera7takj37 td.tinytable_css_w1iem6edjedui4wi4br7, #tinytable_vl53csdfjvera7takj37 th.tinytable_css_w1iem6edjedui4wi4br7 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_vl53csdfjvera7takj37 td.tinytable_css_vh2cwaxf3wrzr2wljg4d, #tinytable_vl53csdfjvera7takj37 th.tinytable_css_vh2cwaxf3wrzr2wljg4d { text-align: left }
+    #tinytable_vl53csdfjvera7takj37 td.tinytable_css_sham2bwu5jt6uk65onq3, #tinytable_vl53csdfjvera7takj37 th.tinytable_css_sham2bwu5jt6uk65onq3 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_vl53csdfjvera7takj37" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <caption>Stock Market Gains and Swiss Watch Exports, Monthly</caption>
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">(1)</th>
+                <th scope="col" data-row="0" data-col="3">(2)</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="3">* p &lt; 0.1, ** p &lt; 0.05, *** p &lt; 0.01</td></tr>
+<tr><td colspan="3">Coefficients are the effect of last month's 12-month stock market change on the 12-month change in export value, by watch tier.</td></tr>
+<tr><td colspan="3">All changes in logs. 15 countries. Standard errors clustered by country in parentheses.</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">Precious mechanical</td>
+                  <td data-row="1" data-col="2">0.042</td>
+                  <td data-row="1" data-col="3">0.174</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2">(0.068)</td>
+                  <td data-row="2" data-col="3">(0.139)</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">Precious quartz</td>
+                  <td data-row="3" data-col="2">0.142**</td>
+                  <td data-row="3" data-col="3">0.255</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2">(0.066)</td>
+                  <td data-row="4" data-col="3">(0.165)</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">Steel mechanical</td>
+                  <td data-row="5" data-col="2">0.070</td>
+                  <td data-row="5" data-col="3">0.241</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2">(0.068)</td>
+                  <td data-row="6" data-col="3">(0.224)</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">Steel quartz</td>
+                  <td data-row="7" data-col="2">0.138**</td>
+                  <td data-row="7" data-col="3">0.322</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1"></td>
+                  <td data-row="8" data-col="2">(0.063)</td>
+                  <td data-row="8" data-col="3">(0.185)</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">FX change × tier</td>
+                  <td data-row="9" data-col="2">Yes</td>
+                  <td data-row="9" data-col="3">Yes</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1">Country × tier FE</td>
+                  <td data-row="10" data-col="2">Yes</td>
+                  <td data-row="10" data-col="3">Yes</td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">Tier × month FE</td>
+                  <td data-row="11" data-col="2">Yes</td>
+                  <td data-row="11" data-col="3">Yes</td>
+                </tr>
+                <tr>
+                  <td data-row="12" data-col="1">Country × year FE</td>
+                  <td data-row="12" data-col="2"></td>
+                  <td data-row="12" data-col="3">Yes</td>
+                </tr>
+                <tr>
+                  <td data-row="13" data-col="1">Observations</td>
+                  <td data-row="13" data-col="2">17753</td>
+                  <td data-row="13" data-col="3">17753</td>
+                </tr>
+                <tr>
+                  <td data-row="14" data-col="1">Within R²</td>
+                  <td data-row="14" data-col="2">0.018</td>
+                  <td data-row="14" data-col="3">0.007</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_c1cflqxjsz844pxobyrt = TinyTable.createTableFunctions("tinytable_c1cflqxjsz844pxobyrt");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 } ], css_id: 'tinytable_css_sr178xr79z1uvz2z6lap',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '3', j: 3 } ], css_id: 'tinytable_css_4lscaf6e3b2qcryhs0ts',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_t051jf7j1c6pzw5bd4by',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_c1cflqxjsz844pxobyrt.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_c1cflqxjsz844pxobyrt td.tinytable_css_sr178xr79z1uvz2z6lap, #tinytable_c1cflqxjsz844pxobyrt th.tinytable_css_sr178xr79z1uvz2z6lap {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_c1cflqxjsz844pxobyrt td.tinytable_css_4lscaf6e3b2qcryhs0ts, #tinytable_c1cflqxjsz844pxobyrt th.tinytable_css_4lscaf6e3b2qcryhs0ts { text-align: left }
+    #tinytable_c1cflqxjsz844pxobyrt td.tinytable_css_t051jf7j1c6pzw5bd4by, #tinytable_c1cflqxjsz844pxobyrt th.tinytable_css_t051jf7j1c6pzw5bd4by {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_c1cflqxjsz844pxobyrt" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <caption>Gold Price Pass-Through to Precious-Metal Watch Prices</caption>
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1">Months after gold change</th>
+                <th scope="col" data-row="0" data-col="2">Cumulative pass-through</th>
+                <th scope="col" data-row="0" data-col="3">Std. error</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="3">Extra % change in precious-metal watch unit values after a 1% gold price rise, relative to steel watches. Standard errors clustered by country.</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">0</td>
+                  <td data-row="1" data-col="2">0.011</td>
+                  <td data-row="1" data-col="3">0.155</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1">3</td>
+                  <td data-row="2" data-col="2">0.097</td>
+                  <td data-row="2" data-col="3">0.121</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">6</td>
+                  <td data-row="3" data-col="2">0.269</td>
+                  <td data-row="3" data-col="3">0.165</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1">12</td>
+                  <td data-row="4" data-col="2">0.064</td>
+                  <td data-row="4" data-col="3">0.170</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
