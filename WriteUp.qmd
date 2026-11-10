@@ -1,8 +1,13 @@
 ---
-title: "Fewer, Pricier, Richer"
+title: "Evolution in the trade of time"
 subtitle: "What Swiss customs data says about why watches got so expensive"
 author: "Kimball Weeks"
-format: html
+format:
+  html:
+    embed-resources: true
+bibliography: references.bib
+nocite: |
+  @fso_cpi
 execute:
   echo: false
   warning: false
@@ -16,35 +21,198 @@ library(here)
 library(tinytable)
 ```
 
-![](images/clipboard-3069118273.png){width="442"}
+In 2000 Switzerland exported 29.7 million watches worth Swiss francs or CHF 9.3 billion. In 2025 it exported 14.6 million watches worth CHF 24.4 billion. That is half as many watches for 2.6 times the money. The average watch leaving the country went from about 310 to about CHF 1,670.
 
-## Introduction
+Typically the explanation is about status. Nobody needs a watch to tell the time anymore, so what we're left with is the same as the fancy car in your neighbors driveway. A show case of wealth, accomplishment, and possibly a little bit of sophistication. These things: watches, cars, clothes, etc. are signals, and a signal in this sense works better the more it costs. In that story the buyers are the rich, the rich have gotten richer, and so watches have gotten pricier.
 
-## Background
+While on the surface this explanation seems sufficent, it actually, like most things has a more interesting explanation. I took 26 years of Swiss customs records, split the growth in export value into how many watches were shipped, what they cost, and which kinds were sold, and then tested one explanation for each piece: smartwatches, wealth at the top, and gold.
 
-## 
+The status story turns out to be about half right. Watches did get much more expensive, in every category. But the shift toward expensive watches comes from the cheap end shrinking, not from the top growing. Rising top incomes go with more watch imports at every price point, not mainly the expensive ones. And I can’t find gold in the prices at all.
 
-fixed affects aborbs anything thats constant within the group wether you measured it or not so for a example a country level fixed affects would control (language, distance from swiss, culture, colonial ties, how much it has always liked watches). Fixed effects would absorb a population average population but not its population growth over time .\
-\
-clustering by country lets us adjust SE's and by extension p-values to account to for the unmeasured affects over time that countries experience
+## The data
+
+The primary source I use is the monthly export statistics of the Swiss customs office [@bazg]. Each row is a tariff line, a destination country and a month, with the number of pieces and the declared value in francs, from January 2000 to September 2026. For anything annual I stop at 2025, the last full year.
+
+Wristwatches sit under two headings. 9101 is watches with a case of precious metal, and 9102 is everything else, which is mostly steel. Within each heading some lines are quartz (battery powered) and some are mechanical. That gives four groups, which I use throughout:
+
+| Group | Share of pieces, 2025 | Share of value, 2025 | Average export value, 2025 |
+|----|----|----|----|
+| Precious mechanical | 2% | 34% | CHF 29,100 |
+| Precious quartz | 1% | 5% | CHF 12,100 |
+| Steel mechanical | 34% | 52% | CHF 2,560 |
+| Steel quartz | 64% | 9% | CHF 244 |
+
+Two things about these numbers matter for everything below.
+
+First, they are export values, meaning what the shipment is declared when it leaves Switzerland. They sit below what the watch sells for in a shop because we are excluding markup.
+
+Second, I never see the price of a particular watch. I see value divided by pieces within a tariff line, which I'll call unit value. The lines are broad. The steel mechanical lines hold a CHF 500 automatic and a steel sports watch that exports for many thousands. So when a unit value rises, it could be the same watches costing more, or better watches being sold, and I can't separate the two.
+
+To explain the patterns I merge in top 1% income shares from the World Inequality Database [@wid], GDP and consumer prices from the World Bank [@wdi], national stock indexes [@oecd_shares; @yahoo], exchange rates [@fred_fx] and the gold price [@wb_pinksheet]. That covers 22 destination countries, 15 of which also have a stock index.
+
+## What changed
+
+A few things stand out before any modeling
+
+The gap between value and pieces opened in two stages. From 2000 to 2012 the number of watches barely moved (29.7 million to 29.2 million) while value more than doubled. After 2012 value grew only 21% and pieces fell by half.
+
+![](output/figures/value_vs_units.png){width="644"}
+
+The expensive end took over the money. The Federation of the Swiss Watch Industry reports exports by price band [@fh]. Watches exported at over CHF 3,000 were 34% of value in 2000 and 80% in 2025, although they are only 13% of pieces. Watches under CHF 200 are still 57% of pieces but 3% of value.
+
+![](output/figures/tier_composition.png)
+
+Mechanical took over from quartz. Mechanical watches were 48% of export value and 8% of pieces in 2000. In 2025 they were 86% of value and 36% of pieces.
+
+![](output/figures/mechanical_watch_share.png)
+
+The destinations moved too. Hong Kong was the largest market in 2012 at CHF 4.1 billion and is down to 1.7 billion. The US doubled from 2.1 to 4.2 billion and is now the largest by a wide margin.
+
+![](output/figures/top_destinations.png)
+
+## Splitting the growth into volume, price, and mix
+
+The change in export value can be split exactly into three parts. Let $V_t$ be total value, $Q_t$ total pieces, and $p_{it}$ the unit value of tariff line $i$ in year $t$. Then
 
 $$
-\text{SE}(\hat\beta) \approx \frac{\text{noise left in the outcome}}{\text{independent variation in } x}
+\Delta \ln V_t = \underbrace{\Delta \ln Q_t}_{\text{volume}} + \underbrace{\sum_i \bar{s}_{it}\, \Delta \ln p_{it}}_{\text{price}} + \underbrace{\Big[\Delta \ln (V_t / Q_t) - \sum_i \bar{s}_{it}\, \Delta \ln p_{it}\Big]}_{\text{mix}}
 $$
 
-once stock markets are controlled for, a higher top-1% share is associated with more imports in every tier, but the estimate is only clearly different from zero for steel quartz. The top tier the hypothesis was about, precious mechanical, shows no reliable link. That goes against the “wealth pulls the top tier” story,
+Volume is the change in the number of watches. Price is the change in unit value within each of the ten tariff lines, weighted by each line's share of value averaged over the two years. Mix is whatever change in the overall average value per watch is not explained by changes within lines, which is the effect of selling relatively more watches from the expensive lines. Everything is in log points, so the three parts add up to the total and the years add up to the period.
+
+| Period       | Value | Volume | Price | Mix   |
+|--------------|-------|--------|-------|-------|
+| 2000 to 2012 | +0.78 | −0.02  | +0.34 | +0.46 |
+| 2012 to 2025 | +0.19 | −0.69  | +0.63 | +0.25 |
+| 2000 to 2025 | +0.97 | −0.71  | +0.96 | +0.71 |
+
+I look at two windows. Over the full period, 2000 to 2025, export value grew while volume fell. But that hides two different stories, so I also split it at 2012, the last year Switzerland shipped as many watches as in 2000. Before 2012, the number of watches held steady and value doubled, mostly because the mix shifted toward mechanical watches. After 2012, the number of watches halved and value grew only 21%, held up by higher prices within each category.
+
+![](output/figures/decomposition_waterfall.png)
+
+Since 2012 Switzerland ships about half as many watches. But a watch in any given category now exports for 87% more than it did, and the mix has tilted toward the pricier categories, which adds another 29%. Those changes multiply rather than add: half as many watches, times 1.87, times 1.29, is about 1.21, so export value ends up 21% higher. In logs the pieces simply add up (−0.69 + 0.63 + 0.25 = +0.19), which is why I report the decomposition that way.
+
+![](output/figures/decomposition_by_year.png)
+
+![](output/figures/price_index_vs_cpi.png)
+
+## Is the shift toward expensive watches the top growing or the bottom shrinking?
+
+As we've seen theres been increase in the mix term over the past 2 decades and and represents the exports moving toward expensive kinds of watch. But shares can move because the top grows or because the bottom shrinks, and those are different stories. To tell them apart I reran the decomposition without the steel quartz lines.
+
+| Sample, 2012 to 2025 | Value | Volume | Price | Mix   |
+|----------------------|-------|--------|-------|-------|
+| All lines            | +0.19 | −0.69  | +0.63 | +0.25 |
+| Without steel quartz | +0.28 | −0.28  | +0.66 | −0.09 |
+| Mechanical only      | +0.31 | −0.28  | +0.67 | −0.08 |
+
+Without steel quartz the mix effect is gone, and it is slightly negative. Among all the other watches, exports moved a little down-market. Steel mechanical went from 44% to 52% of total value while precious-metal watches stayed at about 39%.
+
+The price term hardly changes. Unit values rose about as much with or without quartz, and they rose in every group between 2012 and 2025: precious mechanical from CHF 14,800 to 29,100, steel mechanical from 1,370 to 2,560, and steel quartz from 160 to 244.
+
+Most of the fall in volume is steel quartz. Switzerland exported 14.6 million fewer watches in 2025 than in 2012, and 12.8 million of those are steel quartz. All other watches together fell from 7.1 to 5.3 million.
+
+So the "richer" explanation for why we might be seeing this shift happens to incorrect. Swiss exports did not move up-market because the top grew. They moved up-market because the bottom shrank.
+
+## Smartwatches
+
+The obvious suspect for the bottom is the smartwatch. The Apple Watch went on sale in April 2015, and a CHF 200 quartz watch competes with it much more directly than a CHF 3,000 mechanical one does.
+
+I test this with a difference-in-differences on steel watches only, so the case material is the same on both sides. Quartz lines are the treated group and mechanical lines are the control. The unit of observation is a tariff line $\ell$, a destination $d$ and a month $t$:
+
+$$
+\ln q_{\ell d t} = \beta \, (\text{Quartz}_\ell \times \text{Post}_t) + \alpha_{\ell d} + \mu_{d t} + \varepsilon_{\ell d t}
+$$
+
+Here $q$ is pieces and Post equals one from May 2015 on. The line-by-country fixed effects $\alpha_{\ell d}$ absorb any permanent difference, such as quartz always selling better in a particular country. The country-by-month fixed effects $\mu_{dt}$ absorb anything that hits all steel watches in a country in a given month: a recession, a move in the franc, a tariff, COVID. What is left for $\beta$ is how much quartz fell relative to mechanical, in the same country and the same month, after 2015 compared with before. Standard errors are clustered by country, because shipments to the same country are not independent of each other.
 
 ```{r}
+readRDS(here("output/Regressions_output", "smartwatch_did.rds"))
+```
 
+The basic estimate is −1.37 log points, which is a 75% fall relative to mechanical. Column 2 lets quartz respond differently to the exchange rate, since the franc was unpegged in January 2015, three months before the launch. That hardly changes anything.
+
+Column 3 is the interesting one. Quartz was already losing ground to mechanical before 2015, so some of that 75% is a trend that would have continued anyway. Column 3 gives every tariff line its own linear time trend, and the estimate drops to −0.53, a 41% fall. That is probably too conservative in the other direction, because a trend fitted over the whole sample absorbs part of the post-2015 drop itself. I read the two numbers as a range: steel quartz volumes fell somewhere between 40% and 75% relative to mechanical.
+
+The event study replaces the single Post term with one coefficient per year, with 2014 as the base year.
+
+![](output/figures/smartwatch_event_study.png)
+
+Two things in it should be said plainly. The first is that the gap does not open in 2015. It is flat through 2016, then −0.47 in 2017, −0.84 in 2018 and −1.24 in 2019, and it has stayed between −1.3 and −1.6 since 2020. That is two years after the launch. It fits a product that took a couple of generations to catch on better than it fits an overnight shock, but it also means I can't tie the drop to one date. The second is that the years before 2015 are not flat. Relative to mechanical, quartz was well above its 2014 level in 2000 to 2003 and again in 2012. That is the pre-trend column 3 is trying to deal with.
+
+In pieces, steel quartz exports went from 20.2 million in 2015 to 9.3 million in 2025. Steel mechanical fell too, from 7.4 to 4.9 million, which is why this is an estimate of the relative drop and not the total one.
+
+## Wealth at the top
+
+In my orginial hypothesis I expected top end share of income to affect only the high end watch exports. The idea behind it seems like the obvious conclusion, If Swiss watches are bought by the rich, then countries where the rich are pulling away should import more of them, and the effect should be strongest for the most expensive watches.
+
+I use an annual panel of destination $d$, group $k$ and year $t$, from 2000 to 2024:
+
+$$
+\ln X_{dkt} = \beta_k \ln \text{Top1}_{dt} + \gamma_k' Z_{dt} + \alpha_{dk} + \mu_{kt} + \varepsilon_{dkt}
+$$
+
+$X$ is export value. Top1 is the share of national income going to the top 1%. $Z$ holds GDP per capita, total GDP, the real exchange rate and, in the last column, the stock index. Every slope is allowed to differ across the four groups. The country-by-group fixed effects mean I only use changes within a country over time, so it doesn't matter that some countries are both richer and keener on watches than others. The group-by-year fixed effects take out anything that hits a group everywhere in a given year, which includes the smartwatch effect on quartz.
+
+```{r}
+readRDS(here("output/Regressions_output", "wealth_annual.rds"))
+```
+
+Since everything is in logs, the coefficients are elasticities. In column 4, a 1% rise in the top 1% share goes with 0.83% more precious mechanical imports, 0.82% more precious quartz, 0.81% more steel quartz and 1.78% more steel mechanical.
+
+The stars are misleading if you read them one row at a time. Steel quartz is significant at 5% and precious mechanical is not significant at all, so it is tempting to say the effect lives at the cheap end. But the two estimates are 0.81 and 0.83. What differs is the standard error, 0.31 against 0.67, because steel quartz has far more shipments and a steadier series. When I test the differences directly, none is close to significant. The gaps from steel quartz are 0.02, 0.00 and 0.96, with standard errors of 0.58, 0.26 and 0.72.
+
+So top-end income seems to raise demand for Swiss watches across the board, with no premium for the expensive groups.
+
+Three checks, with the tables in the appendix:
+
+- Splitting value into pieces and unit value, the effect comes through pieces. Countries where the top share rises import more watches, not pricier ones.
+- Dropping Hong Kong, Singapore and the UAE, which re-export much of what they import, shrinks every estimate and leaves only steel mechanical significant, at the 10% level.
+- Stock markets add little in the annual data. In monthly data, a 12-month rise in the stock market predicts export growth for the two quartz groups, with an elasticity of about 0.14. Once I add country-by-year fixed effects, none of the four groups is distinguishable from zero.
+
+I hold all of this loosely. Top income shares move slowly. A typical country's share varies by only about 8% around its own average over the 25 years. The quality of the underlying data varies a lot by country. And there are 22 countries, 15 once I need a stock index. What I'm fairly confident about is that there is no gradient across the groups. I'm much less confident about the size of the effect.
+
+## Gold
+
+Gold averaged CHF 471 an ounce in 2000 and CHF 2,844 in 2025. If precious metal watches got more expensive because gold did, changes in the gold price should show up in their unit values over the following months, and more than they do in steel watches.
+
+The regression uses monthly changes in log unit value by tariff line and country. On the right-hand side are the current and twelve lagged monthly changes in the franc gold price, each interacted with a precious-metal dummy, plus exchange-rate changes, line-by-country fixed effects and month fixed effects, weighted by pieces. Because of the month fixed effects, the coefficients measure the extra response of precious-metal watches relative to steel.
+
+![](output/figures/gold_passthrough.png)
+
+Cumulative pass-through is 0.01 in the same month, 0.10 after three months, 0.27 after six and 0.06 after twelve, with standard errors of 0.12 to 0.17. None of these is distinguishable from zero.
+
+The levels say the same thing more simply. From 2012 to 2025 gold rose 82%. Precious mechanical unit values rose 97%. Steel mechanical unit values, with no gold in the case, rose 87%.
+
+A null in monthly changes doesn't rule out slow pass-through over several years, since brands don't reprice every month. But steel watches rising almost as much as gold ones makes cost an unlikely main driver.
+
+## What I think is going on
+
+- **Fewer.** Almost all of the fall in pieces is cheap steel quartz. The comparison with steel mechanical and the timing both point to smartwatches, though the drop starts in 2017 and not at the 2015 launch.
+- **Pricier.** Unit values roughly doubled within every category since 2012, ahead of inflation. Gold doesn't explain it.
+- **Richer.** The shift toward expensive watches is the bottom shrinking. Rising top incomes go with more watch imports, but about equally for cheap and expensive watches.
+
+There are also things this data can't see. It can't tell a price increase from a better watch, because unit value moves with both. It records where a watch is shipped, not who ends up buying it, which matters for hubs like Hong Kong and for tourists. And it stops at the Swiss border, so it has nothing on retail prices or the second-hand market. This is where I would go next.
+
+## References
+
+::: {#refs}
+:::
+
+## Appendix
+
+```{r}
+readRDS(here("output/Regressions_output", "wealth_tier_diff.rds"))
+```
+
+```{r}
+readRDS(here("output/Regressions_output", "wealth_robustness.rds"))
+```
+
+```{r}
 readRDS(here("output/Regressions_output", "wealth_monthly.rds"))
 ```
 
 ```{r}
-
-readRDS(here("output/Regressions_output", "wealth_annual.rds"))
-```
-
-```{r}
-
-readRDS(here("output/Regressions_output", "wealth_robustness.rds"))
+readRDS(here("output/Regressions_output", "gold_passthrough.rds"))
 ```

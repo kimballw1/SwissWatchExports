@@ -1,9 +1,18 @@
+# R and RStudio
 .Rproj.user
 .Rhistory
+.Rapp.history
 .RData
 .Ruserdata
-.DS_Store
-data/raw/bazg_watch_exports_monthly.csv
+Rplots.pdf
 
+# macOS
+.DS_Store
+
+# Quarto build files (WriteUp.html is self-contained, so the _files folders aren't needed)
 /.quarto/
 **/*.quarto_ipynb
+*_files/
+
+# Too big for GitHub; rebuild from the customs download (see code/01_Clean.R)
+data/raw/bazg_watch_exports_monthly.csv

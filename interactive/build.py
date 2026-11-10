@@ -199,13 +199,10 @@ def main():
     gap = float(np.abs(mine[["value", "volume", "price", "mix"]].values - dec[["value_change", "volume_effect", "price_effect", "mix_effect"]].values).max())
 
     # ---- the paper ---------------------------------------------------------------------------
-    paper = ROOT / "WriteUp_draft.html"
+    paper = ROOT / "WriteUp.html"  # rendered with embed-resources, so it is one self-contained file
     data["paper"] = False
     if paper.exists():
         shutil.copyfile(paper, OUT / "paper.html")
-        files = ROOT / "WriteUp_draft_files"
-        if files.exists():
-            shutil.copytree(files, OUT / "WriteUp_draft_files", dirs_exist_ok=True)
         data["paper"] = True
 
     # ---- assemble ----------------------------------------------------------------------------
