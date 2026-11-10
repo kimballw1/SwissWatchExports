@@ -9,10 +9,10 @@ Rplots.pdf
 # macOS
 .DS_Store
 
-# Quarto build files (WriteUp.html is self-contained, so the _files folders aren't needed)
+# Quarto build files
 /.quarto/
 **/*.quarto_ipynb
 *_files/
 
-# Too big for GitHub; rebuild from the customs download (see code/01_Clean.R)
+# Too big
 data/raw/bazg_watch_exports_monthly.csv
